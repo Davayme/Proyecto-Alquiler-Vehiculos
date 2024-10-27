@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import java.util.Date;
 
 @Entity
+@Table(name = "users")
 public class User {
 
     @Id
@@ -14,6 +15,7 @@ public class User {
     private String lastName;
     private String email;
     private String phone;
+    private boolean active = true;
 
     @ManyToOne
     @JoinColumn(name = "roleId")
@@ -69,5 +71,13 @@ public class User {
 
     public void setRegistrationDate(Date registrationDate) {
         this.registrationDate = registrationDate;
+    }
+
+    public boolean isActive() {
+        return this.active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }

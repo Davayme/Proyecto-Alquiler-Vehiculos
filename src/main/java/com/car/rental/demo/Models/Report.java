@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import java.util.Date;
 
 @Entity
+@Table(name = "reports")
 public class Report {
 
     @Id
@@ -20,6 +21,8 @@ public class Report {
 
     @Lob
     private String content;
+
+    private boolean active;
 
     // Getters and setters
     public Long getReportId() {
@@ -61,4 +64,13 @@ public class Report {
     public void setContent(String content) {
         this.content = content;
     }
+
+    public boolean isActive() {
+        return this.active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
 }

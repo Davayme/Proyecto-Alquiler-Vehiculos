@@ -1,37 +1,41 @@
-package com.car.rental.demo.Models;
+package com.car.rental.demo.Vehicles.Dtos;
 
-import jakarta.persistence.*;
 import java.util.Date;
 
-@Entity
-@Table(name = "vehicles")
-public class Vehicle {
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.PastOrPresent;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long vehicleId;
+public class VehicleDTO {
 
+
+    @NotBlank(message = "Brand is required")
     private String brand;
-    private String model;
-    private String licensePlate; // Matricula
-    private String type;
-    private String status; // Available, In Maintenance, Rented
-    private double dailyRate;
-    private boolean active = true;
 
-    @Temporal(TemporalType.DATE)
+    @NotBlank(message = "Model is required")
+    private String model;
+
+    @NotBlank(message = "License Plate is required")
+    private String licensePlate;
+
+    @NotBlank(message = "Type is required")
+    private String type;
+
+    @NotBlank(message = "Status is required")
+    private String status;
+
+    @Positive(message = "Daily rate must be positive")
+    private double dailyRate;
+
+    @PastOrPresent(message = "Acquisition date must be in the past or present")
     private Date acquisitionDate;
 
+     @PositiveOrZero(message = "Mileage must be zero or positive")
     private double mileage;
+
+    @NotBlank(message = "Location is required")
     private String location;
-
-    public Long getVehicleId() {
-        return vehicleId;
-    }
-
-    public void setVehicleId(Long vehicleId) {
-        this.vehicleId = vehicleId;
-    }
 
     public String getBrand() {
         return brand;
@@ -103,13 +107,5 @@ public class Vehicle {
 
     public void setLocation(String location) {
         this.location = location;
-    }
-
-    public boolean isActive() {
-        return this.active;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
     }
 }

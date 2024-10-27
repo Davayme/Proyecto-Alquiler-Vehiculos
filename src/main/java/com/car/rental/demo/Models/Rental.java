@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import java.util.Date;
 
 @Entity
+@Table(name = "rentals")
 public class Rental {
 
     @Id
@@ -30,6 +31,7 @@ public class Rental {
 
     private double totalAmount;
     private String status; // Reserved, In Progress, Completed
+    private boolean active = true;
 
     // Getters and setters
     public Long getRentalId() {
@@ -94,5 +96,13 @@ public class Rental {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public boolean isActive() {
+        return this.active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }
