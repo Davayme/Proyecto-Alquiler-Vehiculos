@@ -3,6 +3,7 @@ package com.car.rental.demo.Models;
 import jakarta.persistence.*;
 
 @Entity
+@Table(name = "rates")
 public class Rate {
 
     @Id
@@ -16,6 +17,7 @@ public class Rate {
     private String season; // High, Low
     private String rentalDuration; // Daily, Weekly, Monthly
     private double cost;
+    private boolean active = true;
 
     // Getters and setters
     public Long getRateId() {
@@ -56,5 +58,13 @@ public class Rate {
 
     public void setCost(double cost) {
         this.cost = cost;
+    }
+
+    public boolean isActive() {
+        return this.active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }
