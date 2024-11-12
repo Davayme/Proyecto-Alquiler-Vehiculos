@@ -40,12 +40,14 @@ public class AuthService {
         User user = userRepository.findByUidFirebase(uid)
                 .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado en la base de datos"));
 
-        // Paso 4: Devolver el token y el rol en el DTO de respuesta
-        return new LoginResponseDto("Bearer " + firebaseToken, user.getRole().name());
+        // Paso 4: Construir el nombre completo
+        String fullName = user.getFirstName() + " " + user.getLastName();
+
+        // Paso 5: Devolver el token, el rol, el nombre completo y el correo en el DTO de respuesta
+        return new LoginResponseDto("Bearer " + firebaseToken, user.getRole().name(), fullName, user.getEmail());
     }
 
     private String authenticateWithFirebase(String email, String password) {
-  
         String url = "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=" + firebaseApiKey;
 
         // Crear el cuerpo de la solicitud
