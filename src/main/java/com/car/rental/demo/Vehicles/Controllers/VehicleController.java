@@ -1,7 +1,9 @@
 package com.car.rental.demo.Vehicles.Controllers;
 
+import com.car.rental.demo.Cloudinary.CloudinaryService;
 import com.car.rental.demo.Exceptions.ResourceNotFoundException;
 import com.car.rental.demo.Models.Vehicle;
+import com.car.rental.demo.Models.VehicleImage;
 import com.car.rental.demo.Vehicles.Dtos.VehicleDTO;
 import com.car.rental.demo.Vehicles.Services.VehicleService;
 
@@ -12,9 +14,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+
 @RestController
 @RequestMapping("/vehicles")
 @Validated
@@ -22,6 +26,8 @@ public class VehicleController {
 
     @Autowired
     private VehicleService vehicleService;
+    @Autowired
+    private CloudinaryService cloudinaryService;
 
     // Crear un nuevo vehículo
     @PostMapping
@@ -34,6 +40,22 @@ public class VehicleController {
                     .body("Error al crear el vehículo: " + ex.getMessage());
         }
     }
+
+    //Insertar imagenes
+    @PostMapping("/{id}")
+    public ResponseEntity<?> createVehicleImage(@PathVariable Long id, @RequestParam("file") MultipartFile file) {
+        try {
+            // Procesar la imagen usando el servicio de Cloudinary
+            String imageUrl = cloudinaryService.uploadImage(file);
+            VehicleImage vehicleImage = vehicleService.createVehicleImage(id, imageUrl);
+    
+            return ResponseEntity.status(HttpStatus.CREATED).body(vehicleImage);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al subir la imagen: " + e.getMessage());
+        }
+    }
+    
 
     // Obtener todos los vehículos
     @GetMapping

@@ -1,8 +1,29 @@
 package com.car.rental.demo.Models;
 
-import jakarta.persistence.*;
 import java.util.Date;
+import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Entity
 @Table(name = "vehicles")
 public class Vehicle {
@@ -17,6 +38,7 @@ public class Vehicle {
     private String type;
     private String status; // Available, In Maintenance, Rented
     private double dailyRate;
+    @Builder.Default
     private boolean active = true;
 
     @Temporal(TemporalType.DATE)
@@ -25,91 +47,7 @@ public class Vehicle {
     private double mileage;
     private String location;
 
-    public Long getVehicleId() {
-        return vehicleId;
-    }
-
-    public void setVehicleId(Long vehicleId) {
-        this.vehicleId = vehicleId;
-    }
-
-    public String getBrand() {
-        return brand;
-    }
-
-    public void setBrand(String brand) {
-        this.brand = brand;
-    }
-
-    public String getModel() {
-        return model;
-    }
-
-    public void setModel(String model) {
-        this.model = model;
-    }
-
-    public String getLicensePlate() {
-        return licensePlate;
-    }
-
-    public void setLicensePlate(String licensePlate) {
-        this.licensePlate = licensePlate;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public double getDailyRate() {
-        return dailyRate;
-    }
-
-    public void setDailyRate(double dailyRate) {
-        this.dailyRate = dailyRate;
-    }
-
-    public Date getAcquisitionDate() {
-        return acquisitionDate;
-    }
-
-    public void setAcquisitionDate(Date acquisitionDate) {
-        this.acquisitionDate = acquisitionDate;
-    }
-
-    public double getMileage() {
-        return mileage;
-    }
-
-    public void setMileage(double mileage) {
-        this.mileage = mileage;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
-    public boolean isActive() {
-        return this.active;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
-    }
+    @OneToMany(mappedBy = "vehicle", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<VehicleImage> images; 
 }

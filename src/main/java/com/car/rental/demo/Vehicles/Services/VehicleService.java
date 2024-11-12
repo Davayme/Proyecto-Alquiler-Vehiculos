@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.car.rental.demo.Models.Vehicle;
+import com.car.rental.demo.Models.VehicleImage;
+import com.car.rental.demo.Vehicles.VehicleImageRepository;
 import com.car.rental.demo.Vehicles.VehicleRepository;
 import com.car.rental.demo.Vehicles.Dtos.VehicleDTO;
 
@@ -14,7 +16,8 @@ import com.car.rental.demo.Vehicles.Dtos.VehicleDTO;
 public class VehicleService {
     @Autowired
     private VehicleRepository vehicleRepository;
-
+    @Autowired
+    private VehicleImageRepository vehicleImageRepository;
     // Crear un vehículo
     public Vehicle createVehicle(VehicleDTO vehicleDTO) {
         Vehicle vehicle = new Vehicle();
@@ -64,5 +67,16 @@ public class VehicleService {
                 .orElseThrow(() -> new RuntimeException("Vehículo no encontrado"));
         vehicle.setActive(false);
         vehicleRepository.save(vehicle);
+    }
+
+    //Ingresar imagenes vehiculo
+    public VehicleImage createVehicleImage(Long vehicleId, String url) {
+        Vehicle vehicle = vehicleRepository.findById(vehicleId)
+                .orElseThrow(() -> new RuntimeException("Vehículo no encontrado"));
+        new VehicleImage();
+        return vehicleImageRepository.save(VehicleImage.builder()
+        .vehicle(vehicle)
+        .imageUrl(url)
+        .build());
     }
 }

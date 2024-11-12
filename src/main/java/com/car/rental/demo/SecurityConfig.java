@@ -15,7 +15,7 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable()) // Desactiva CSRF si estás en un entorno de prueba
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/auth/**").permitAll() // Permite el acceso a todas las rutas bajo /auth
-                .anyRequest().authenticated() // Requiere autenticación para cualquier otra ruta
+                .anyRequest().permitAll() // Requiere autenticación para cualquier otra ruta
             );
         return http.build();
     }
