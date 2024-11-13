@@ -1,14 +1,16 @@
 package com.car.rental.demo.Users.Services;
 
-
+import com.car.rental.demo.Exceptions.InvalidRequestException;
 import com.car.rental.demo.Models.User;
 import com.car.rental.demo.Users.UserRepository;
 import com.car.rental.demo.Users.Dtos.CreateUserDto;
+import com.car.rental.demo.Users.Dtos.EditUserDto;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseToken;
 import com.google.firebase.auth.UserRecord;
 import lombok.RequiredArgsConstructor;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -20,29 +22,30 @@ public class UserService {
     private final UserRepository userRepository;
 
     public User createUser(CreateUserDto createUserDto) throws Exception {
-        // Paso 1: Crear el usuario en Firebase Authentication sin registrar el número de teléfono
+        // Paso 1: Crear el usuario en Firebase Authentication sin registrar el número
+        // de teléfono
         UserRecord.CreateRequest request = new UserRecord.CreateRequest()
-            .setEmail(createUserDto.getEmail())
-            .setPassword(createUserDto.getPassword())
-            .setDisplayName(createUserDto.getFirstName() + " " + createUserDto.getLastName())
-            .setDisabled(false);
+                .setEmail(createUserDto.getEmail())
+                .setPassword(createUserDto.getPassword())
+                .setDisplayName(createUserDto.getFirstName() + " " + createUserDto.getLastName())
+                .setDisabled(false);
 
         UserRecord userRecord = FirebaseAuth.getInstance().createUser(request);
 
-        // Paso 2: Crear el usuario en la base de datos con el número de teléfono incluido
+        // Paso 2: Crear el usuario en la base de datos con el número de teléfono
+        // incluido
         User user = User.builder()
-            .uidFirebase(userRecord.getUid())
-            .firstName(createUserDto.getFirstName())
-            .lastName(createUserDto.getLastName())
-            .email(createUserDto.getEmail())
-            .phone(createUserDto.getPhone())  // El número se guarda solo en la base de datos
-            .role(createUserDto.getRole())
-            .active(true)
-            .build();
+                .uidFirebase(userRecord.getUid())
+                .firstName(createUserDto.getFirstName())
+                .lastName(createUserDto.getLastName())
+                .email(createUserDto.getEmail())
+                .phone(createUserDto.getPhone()) // El número se guarda solo en la base de datos
+                .role(createUserDto.getRole())
+                .active(true)
+                .build();
 
         return userRepository.save(user);
     }
-
 
     public Optional<User> findByUidFirebase(String uidFirebase) {
         return userRepository.findByUidFirebase(uidFirebase);
@@ -63,4 +66,41 @@ public class UserService {
     public UserRecord getFirebaseUser(String uid) throws Exception {
         return FirebaseAuth.getInstance().getUser(uid);
     }
+
+    // Operaciones CRUD
+    public List<User> getActiveUsers() {
+        return userRepository.findByActiveTrue();
+    }
+
+    public User updateUser(Long userId, EditUserDto editUserDto) {
+        if (editUserDto == null || userId == null) {
+            throw new InvalidRequestException("El JSON de la petición está incompleto o es inválido.");
+        }
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado con ID: " + userId));
+
+        user.setFirstName(editUserDto.getFirstName());
+        user.setLastName(editUserDto.getLastName());
+        user.setPhone(editUserDto.getPhone());
+
+        if (editUserDto.getRole() != null) {
+            user.setRole(editUserDto.getRole());
+        }
+
+        if (editUserDto.getActive() != null) {
+            user.setActive(editUserDto.getActive());
+        }
+
+        return userRepository.save(user);
+    }
+
+
+    public User deletUser(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado con ID: " + userId));
+    
+        user.setActive(false);
+        return userRepository.save(user);
+    }
+    
 }
