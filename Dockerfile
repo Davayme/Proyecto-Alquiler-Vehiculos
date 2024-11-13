@@ -1,8 +1,17 @@
+# Etapa 1: Build
 FROM maven:3.8.5-openjdk-17 AS build
-COPY . .
+WORKDIR /app
+# Copiar solo los archivos necesarios para la compilación
+COPY pom.xml .
+COPY src ./src
 RUN mvn clean package -DskipTests
 
-FROM openjdk:17.0.1-jdk-slim
-COPY --from=build /target/demo-0.0.1-SNAPSHOT.jar demo.jar
+# Etapa 2: Runtime
+FROM openjdk:17-alpine
+WORKDIR /app
+# Copiar el JAR generado desde la etapa de build
+COPY --from=build /app/target/demo-0.0.1-SNAPSHOT.jar app.jar
+# Exponer el puerto 8080
 EXPOSE 8080
-ENTRYPOINT ["java","-jar","demo.jar"]
+# Configurar las opciones de la JVM para mejorar el rendimiento
+ENTRYPOINT ["java", "-XX:+UseG1GC", "-XX:+UnlockExperimentalVMOptions", "-XX:+UseContainerSupport", "-Xmx512m", "-Xms512m", "-jar", "app.jar"]
