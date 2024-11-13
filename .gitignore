@@ -9,7 +9,7 @@ src/main/resources/application.yml
 
 # Ignorar el archivo de cuenta de servicio de Firebase
 src/main/resources/firebase/firebase-service-account.json
-
+etc
 ### STS ###
 .apt_generated
 .classpath
