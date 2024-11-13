@@ -6,9 +6,16 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.PastOrPresent;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class VehicleDTO {
-
 
     @NotBlank(message = "Brand is required")
     private String brand;
@@ -31,81 +38,10 @@ public class VehicleDTO {
     @PastOrPresent(message = "Acquisition date must be in the past or present")
     private Date acquisitionDate;
 
-     @PositiveOrZero(message = "Mileage must be zero or positive")
+    @PositiveOrZero(message = "Mileage must be zero or positive")
     private double mileage;
 
     @NotBlank(message = "Location is required")
     private String location;
 
-    public String getBrand() {
-        return brand;
-    }
-
-    public void setBrand(String brand) {
-        this.brand = brand;
-    }
-
-    public String getModel() {
-        return model;
-    }
-
-    public void setModel(String model) {
-        this.model = model;
-    }
-
-    public String getLicensePlate() {
-        return licensePlate;
-    }
-
-    public void setLicensePlate(String licensePlate) {
-        this.licensePlate = licensePlate;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public double getDailyRate() {
-        return dailyRate;
-    }
-
-    public void setDailyRate(double dailyRate) {
-        this.dailyRate = dailyRate;
-    }
-
-    public Date getAcquisitionDate() {
-        return acquisitionDate;
-    }
-
-    public void setAcquisitionDate(Date acquisitionDate) {
-        this.acquisitionDate = acquisitionDate;
-    }
-
-    public double getMileage() {
-        return mileage;
-    }
-
-    public void setMileage(double mileage) {
-        this.mileage = mileage;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
 }
