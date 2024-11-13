@@ -14,4 +14,5 @@ COPY --from=build /app/target/demo-0.0.1-SNAPSHOT.jar app.jar
 # Exponer el puerto 8080
 EXPOSE 8080
 # Configurar las opciones de la JVM para mejorar el rendimiento
-ENTRYPOINT ["java", "-XX:+UseG1GC", "-XX:+UnlockExperimentalVMOptions", "-XX:+UseContainerSupport", "-Xmx512m", "-Xms512m", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-Xms128m", "-Xmx510m", "-XX:+UseG1GC", "-XX:MaxGCPauseMillis=200", "-XX:+UseStringDeduplication", "-jar", "app.jar"]
+
