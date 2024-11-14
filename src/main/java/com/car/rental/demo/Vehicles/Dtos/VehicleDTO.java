@@ -3,8 +3,8 @@ package com.car.rental.demo.Vehicles.Dtos;
 import java.util.Date;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
-import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,14 +26,11 @@ public class VehicleDTO {
     @NotBlank(message = "License Plate is required")
     private String licensePlate;
 
-    @NotBlank(message = "Type is required")
-    private String type;
+    @NotNull(message = "Type ID is required")
+    private Long typeId;
 
     @NotBlank(message = "Status is required")
     private String status;
-
-    @Positive(message = "Daily rate must be positive")
-    private double dailyRate;
 
     @PastOrPresent(message = "Acquisition date must be in the past or present")
     private Date acquisitionDate;

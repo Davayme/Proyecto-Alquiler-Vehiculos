@@ -39,7 +39,7 @@ public class UserService {
                 .firstName(createUserDto.getFirstName())
                 .lastName(createUserDto.getLastName())
                 .email(createUserDto.getEmail())
-                .phone(createUserDto.getPhone()) // El número se guarda solo en la base de datos
+                .phone(createUserDto.getPhone()) 
                 .role(createUserDto.getRole())
                 .active(true)
                 .build();

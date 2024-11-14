@@ -1,9 +1,21 @@
+
 package com.car.rental.demo.Models;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import java.util.Date;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Entity
-@Table(name = "rates")
+@Table(name = "rates", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"typeId", "season", "rentalDuration"})
+})
 public class Rate {
 
     @Id
@@ -11,60 +23,38 @@ public class Rate {
     private Long rateId;
 
     @ManyToOne
-    @JoinColumn(name = "vehicleId")
-    private Vehicle vehicle;
+    @JoinColumn(name = "typeId", nullable = false)
+    private TypeVehicle type; // Relación con el tipo de vehículo
 
-    private String season; // High, Low
-    private String rentalDuration; // Daily, Weekly, Monthly
-    private double cost;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Season season; // Temporada: HIGH, LOW
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private RentalDuration rentalDuration; // Duración: DAILY, WEEKLY, MONTHLY
+
+    @Column(nullable = false)
+    private double cost; // Precio de la tarifa
+
+    @Builder.Default
+    @Column(nullable = false, columnDefinition = "boolean default true")
     private boolean active = true;
 
-    // Getters and setters
-    public Long getRateId() {
-        return rateId;
+    @Temporal(TemporalType.DATE)
+    private Date startDate; // Fecha opcional de inicio de la tarifa
+
+    @Temporal(TemporalType.DATE)
+    private Date endDate; // Fecha opcional de fin de la tarifa
+
+    public enum Season {
+        HIGH, // Temporada alta
+        LOW   // Temporada baja
     }
 
-    public void setRateId(Long rateId) {
-        this.rateId = rateId;
-    }
-
-    public Vehicle getVehicle() {
-        return vehicle;
-    }
-
-    public void setVehicle(Vehicle vehicle) {
-        this.vehicle = vehicle;
-    }
-
-    public String getSeason() {
-        return season;
-    }
-
-    public void setSeason(String season) {
-        this.season = season;
-    }
-
-    public String getRentalDuration() {
-        return rentalDuration;
-    }
-
-    public void setRentalDuration(String rentalDuration) {
-        this.rentalDuration = rentalDuration;
-    }
-
-    public double getCost() {
-        return cost;
-    }
-
-    public void setCost(double cost) {
-        this.cost = cost;
-    }
-
-    public boolean isActive() {
-        return this.active;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
+    public enum RentalDuration {
+        DAILY,   // Por día
+        WEEKLY,  // Por semana
+        MONTHLY  // Por mes
     }
 }
