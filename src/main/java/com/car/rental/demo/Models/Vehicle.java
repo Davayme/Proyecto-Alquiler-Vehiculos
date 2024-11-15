@@ -2,10 +2,15 @@ package com.car.rental.demo.Models;
 
 import java.util.Date;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -36,7 +41,11 @@ public class Vehicle {
     private String brand;
     private String model;
     private String licensePlate; // Matricula
-    private String status; // Available, In Maintenance, Rented
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private VehicleStatus status; // Available, In Maintenance, Rented
+
     @Builder.Default
     private boolean active = true;
 
@@ -47,10 +56,17 @@ public class Vehicle {
     private String location;
 
     @ManyToOne
-    @JoinColumn(name = "typeId") 
+    @JoinColumn(name = "typeId")
+    @JsonBackReference
     private TypeVehicle type;
 
     @OneToMany(mappedBy = "vehicle", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<VehicleImage> images;
+
+    public enum VehicleStatus {
+        AVAILABLE, // Disponible
+        IN_MAINTENANCE, // En mantenimiento
+        RENTED // Alquilado
+    }
 }

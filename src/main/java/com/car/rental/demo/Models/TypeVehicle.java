@@ -2,6 +2,8 @@ package com.car.rental.demo.Models;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -29,5 +31,6 @@ public class TypeVehicle {
     private String description;
 
     @OneToMany(mappedBy = "type", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<Vehicle> vehicles; // Relación con vehículos
 }

@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @RequestMapping("/rates")
@@ -16,6 +18,16 @@ import org.springframework.web.bind.annotation.*;
 public class RateController {
 
     private final RateService rateService;
+
+    // obtener tarifas
+    @GetMapping
+    public ResponseEntity<?> getRates() {
+        try {
+            return ResponseEntity.ok(rateService.getRates());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al obtener las tarifas");
+        }
+    }
 
     // Crear tarifa
     @PostMapping
@@ -43,4 +55,6 @@ public class RateController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al actualizar la tarifa");
         }
     }
+
+    
 }

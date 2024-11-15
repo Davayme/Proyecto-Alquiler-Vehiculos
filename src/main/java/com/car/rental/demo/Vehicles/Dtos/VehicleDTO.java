@@ -2,6 +2,8 @@ package com.car.rental.demo.Vehicles.Dtos;
 
 import java.util.Date;
 
+import com.car.rental.demo.Models.Vehicle.VehicleStatus;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
@@ -29,8 +31,8 @@ public class VehicleDTO {
     @NotNull(message = "Type ID is required")
     private Long typeId;
 
-    @NotBlank(message = "Status is required")
-    private String status;
+    @NotNull(message = "Status is required")
+    private VehicleStatus status;
 
     @PastOrPresent(message = "Acquisition date must be in the past or present")
     private Date acquisitionDate;

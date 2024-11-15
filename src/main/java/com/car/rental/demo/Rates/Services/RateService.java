@@ -7,6 +7,10 @@ import com.car.rental.demo.Rates.Dtos.UpdateRateDto;
 import com.car.rental.demo.Vehicles.TypeVehicleRepository;
 
 import lombok.RequiredArgsConstructor;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Service;
 
 
@@ -16,6 +20,15 @@ public class RateService {
 
     private final RateRepository rateRepository;
     private final TypeVehicleRepository typeVehicleRepository;
+
+    //Obtener tarifas
+    public List<Rate> getRates() {
+        return rateRepository.findAll().stream()
+                .filter(rate -> rate.isActive())
+                .collect(Collectors.toList());
+    }
+
+
 
     public Rate createRate(CreateRateDto createRateDto) {
         // Verificar que el tipo de vehículo exista
