@@ -24,7 +24,9 @@ public class SecurityConfig {
                 .requestMatchers("/auth/login").permitAll()
                   // Permitir acceso sin autenticación a la ruta de login
                 .requestMatchers("/vehicles/**").hasRole("ADMIN")
-                .requestMatchers("/users/**").hasRole("ADMIN")  // Solo acceso a ADMIN en rutas de vehículos
+                .requestMatchers("/users/**").hasRole("ADMIN") 
+                .requestMatchers("/type-vehicles/**").hasRole("ADMIN") 
+                .requestMatchers("/rates").hasRole("ADMIN")
                 .anyRequest().authenticated()  // Requiere autenticación para cualquier otra solicitud
             )
             .addFilterBefore(firebaseAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
