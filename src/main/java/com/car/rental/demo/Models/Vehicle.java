@@ -3,8 +3,8 @@ package com.car.rental.demo.Models;
 import java.util.Date;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -32,6 +32,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @Entity
 @Table(name = "vehicles")
+@JsonIdentityInfo(
+  generator = ObjectIdGenerators.PropertyGenerator.class, 
+  property = "vehicleId")
 public class Vehicle {
 
     @Id
@@ -40,7 +43,7 @@ public class Vehicle {
 
     private String brand;
     private String model;
-    private String licensePlate; // Matricula
+    private String licensePlate; // Matrícula
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -56,12 +59,10 @@ public class Vehicle {
     private String location;
 
     @ManyToOne
-    @JoinColumn(name = "typeId")
-    @JsonBackReference
+    @JoinColumn(name = "typeId", nullable = false)
     private TypeVehicle type;
 
     @OneToMany(mappedBy = "vehicle", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
     private List<VehicleImage> images;
 
     public enum VehicleStatus {

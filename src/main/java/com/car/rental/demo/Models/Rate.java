@@ -1,12 +1,15 @@
-
 package com.car.rental.demo.Models;
+
+import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import java.util.Date;
 
 @Data
 @AllArgsConstructor
@@ -16,6 +19,9 @@ import java.util.Date;
 @Table(name = "rates", uniqueConstraints = {
         @UniqueConstraint(columnNames = {"typeId", "season", "rentalDuration"})
 })
+@JsonIdentityInfo(
+  generator = ObjectIdGenerators.PropertyGenerator.class, 
+  property = "rateId")
 public class Rate {
 
     @Id
