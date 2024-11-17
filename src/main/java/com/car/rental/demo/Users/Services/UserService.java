@@ -24,22 +24,27 @@ public class UserService {
     public User createUser(CreateUserDto createUserDto) throws Exception {
         // Paso 1: Crear el usuario en Firebase Authentication sin registrar el número
         // de teléfono
+        if (createUserDto.getRole() == null) {
+            System.out.println("Role is null");
+            createUserDto.setRole(User.Role.CLIENT);
+        }
         UserRecord.CreateRequest request = new UserRecord.CreateRequest()
                 .setEmail(createUserDto.getEmail())
                 .setPassword(createUserDto.getPassword())
-                .setDisplayName(createUserDto.getFirstName() + " " + createUserDto.getLastName())
+                //.setDisplayName(createUserDto.getFirstName() + " " + createUserDto.getLastName())
                 .setDisabled(false);
 
         UserRecord userRecord = FirebaseAuth.getInstance().createUser(request);
 
         // Paso 2: Crear el usuario en la base de datos con el número de teléfono
         // incluido
+        
         User user = User.builder()
                 .uidFirebase(userRecord.getUid())
-                .firstName(createUserDto.getFirstName())
-                .lastName(createUserDto.getLastName())
+                //.firstName(createUserDto.getFirstName())
+                //.lastName(createUserDto.getLastName())
                 .email(createUserDto.getEmail())
-                .phone(createUserDto.getPhone()) 
+                //.phone(createUserDto.getPhone()) 
                 .role(createUserDto.getRole())
                 .active(true)
                 .build();
@@ -79,9 +84,9 @@ public class UserService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado con ID: " + userId));
 
-        user.setFirstName(editUserDto.getFirstName());
-        user.setLastName(editUserDto.getLastName());
-        user.setPhone(editUserDto.getPhone());
+        // user.setFirstName(editUserDto.getFirstName());
+        // user.setLastName(editUserDto.getLastName());
+        // user.setPhone(editUserDto.getPhone());
 
         if (editUserDto.getRole() != null) {
             user.setRole(editUserDto.getRole());
