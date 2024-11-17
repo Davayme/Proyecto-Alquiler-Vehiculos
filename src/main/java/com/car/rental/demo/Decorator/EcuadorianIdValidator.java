@@ -82,6 +82,7 @@ public class EcuadorianIdValidator implements ConstraintValidator<ValidEcuadoria
             sum += product;
         }
         int remainder = sum % 10 == 0 ? 0 : 10 - (sum % 10);
+        System.out.println(remainder);
         if (remainder != verificationDigit) {
             return false;
         }

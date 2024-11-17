@@ -56,8 +56,7 @@ public class ClientController {
     public ResponseEntity<?> deleteClient(@PathVariable("id") Long clientId) {
         try {
             clientService.deleteClient(clientId);
-            return ResponseEntity.status(HttpStatus.NO_CONTENT)
-                    .body("cliente con ese id: " + clientId + " se eliminó correctamente");
+            return ResponseEntity.ok("cliente con ese id: " + clientId + " se eliminó correctamente");
         } catch (NoSuchElementException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body("Error: " + ex.getMessage());
