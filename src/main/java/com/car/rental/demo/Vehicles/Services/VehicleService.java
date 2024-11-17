@@ -1,15 +1,18 @@
 package com.car.rental.demo.Vehicles.Services;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.car.rental.demo.Models.Rate;
+import com.car.rental.demo.Models.Season;
 import com.car.rental.demo.Models.TypeVehicle;
 import com.car.rental.demo.Models.Vehicle;
 import com.car.rental.demo.Models.VehicleImage;
-
+import com.car.rental.demo.Rates.SeasonRepository;
 import com.car.rental.demo.Vehicles.VehicleImageRepository;
 import com.car.rental.demo.Vehicles.VehicleRepository;
 import com.car.rental.demo.Vehicles.TypeVehicleRepository;
@@ -28,7 +31,9 @@ public class VehicleService {
     @Autowired
     private TypeVehicleRepository typeRepository;
 
-
+    @Autowired
+    private SeasonRepository seasonRepository;
+    
 
     // Crear un vehículo
     public Vehicle createVehicle(VehicleDTO vehicleDTO) {
@@ -67,21 +72,10 @@ public class VehicleService {
         dto.setMileage(vehicle.getMileage());
         dto.setLocation(vehicle.getLocation());
         dto.setType(vehicle.getType().getName());
-        dto.setDailyRate(200);
-        // Convertir las tarifas
-/*         if (vehicle.getType().getRates() != null) {
-            List<RateDTO> rateDTOs = vehicle.getType().getRates().stream()
-                    .map(rate -> {
-                        RateDTO rateDTO = new RateDTO();
-                        rateDTO.setRateId(rate.getRateId());
-                        rateDTO.setSeason(rate.getSeason().name());
-                        rateDTO.setRentalDuration(rate.getRentalDuration().name());
-                        rateDTO.setCost(rate.getCost());
-                        return rateDTO;
-                    })
-                    .collect(Collectors.toList());
-            dto.setRates(rateDTOs);
-        } */
+
+        // Calcular la tarifa diaria basada en la temporada actual
+        double dailyRate = calculateDailyRate(vehicle);
+        dto.setDailyRate(dailyRate);
 
         // Convertir las imágenes
         if (vehicle.getImages() != null) {
@@ -97,6 +91,38 @@ public class VehicleService {
         }
         return dto;
     }
+
+    private double calculateDailyRate(Vehicle vehicle) {
+        LocalDate currentDate = LocalDate.now();
+        int currentDay = currentDate.getDayOfMonth();
+        int currentMonth = currentDate.getMonthValue();
+
+        for (Rate rate : vehicle.getType().getRates()) {
+            Season season = rate.getSeason();
+            if (isDateInSeason(currentDay, currentMonth, season)) {
+                return rate.getCost();
+            }
+        }
+        return 0; // Default rate if no season matches
+    }
+
+    private boolean isDateInSeason(int day, int month, Season season) {
+        int startDay = season.getStartDay();
+        int startMonth = season.getStartMonth();
+        int endDay = season.getEndDay();
+        int endMonth = season.getEndMonth();
+
+        if (startMonth < endMonth || (startMonth == endMonth && startDay <= endDay)) {
+            // Season within the same year
+            return (month > startMonth || (month == startMonth && day >= startDay)) &&
+                   (month < endMonth || (month == endMonth && day <= endDay));
+        } else {
+            // Season spans the end of the year
+            return (month > startMonth || (month == startMonth && day >= startDay)) ||
+                   (month < endMonth || (month == endMonth && day <= endDay));
+        }
+    }
+    
     // Obtener un vehículo por ID
     public Optional<Vehicle> getVehicleById(Long vehicleId) {
         return vehicleRepository.findById(vehicleId);
