@@ -2,6 +2,8 @@ package com.car.rental.demo.Vehicles.Dtos;
 
 import java.util.Date;
 
+import com.car.rental.demo.Models.Vehicle.FuelType;
+import com.car.rental.demo.Models.Vehicle.TransmissionType;
 import com.car.rental.demo.Models.Vehicle.VehicleStatus;
 
 import jakarta.validation.constraints.NotBlank;
@@ -42,5 +44,17 @@ public class VehicleDTO {
 
     @NotBlank(message = "Location is required")
     private String location;
+
+    @NotNull(message = "Air Conditioning is required")
+    private Boolean airConditioning;
+
+    @NotNull(message = "Number of Doors is required")
+    private Integer numberOfDoors;
+
+    @NotNull(message = "Fuel Type is required")
+    private FuelType fuelType;
+
+    @NotNull(message = "Transmission Type is required")
+    private TransmissionType transmissionType;
 
 }
