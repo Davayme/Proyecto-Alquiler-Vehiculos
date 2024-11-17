@@ -1,11 +1,15 @@
 package com.car.rental.demo.Rates.Services;
 import com.car.rental.demo.Models.Rate;
+import com.car.rental.demo.Models.Season;
 import com.car.rental.demo.Models.TypeVehicle;
 import com.car.rental.demo.Rates.RateRepository;
+import com.car.rental.demo.Rates.SeasonRepository;
 import com.car.rental.demo.Rates.Dtos.CreateRateDto;
 import com.car.rental.demo.Rates.Dtos.UpdateRateDto;
 import com.car.rental.demo.Vehicles.TypeVehicleRepository;
 
+import jakarta.persistence.EntityExistsException;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
@@ -20,6 +24,7 @@ public class RateService {
 
     private final RateRepository rateRepository;
     private final TypeVehicleRepository typeVehicleRepository;
+    private final SeasonRepository seasonRepository;
 
     //Obtener tarifas
     public List<Rate> getRates() {
@@ -29,25 +34,28 @@ public class RateService {
     }
 
 
-
     public Rate createRate(CreateRateDto createRateDto) {
-        // Verificar que el tipo de vehículo exista
+        // Validar que el tipo de vehículo exista
         TypeVehicle typeVehicle = typeVehicleRepository.findById(createRateDto.getTypeId())
-                .orElseThrow(() -> new IllegalArgumentException("El tipo de vehículo no existe con ID: " + createRateDto.getTypeId()));
+                .orElseThrow(() -> new EntityNotFoundException("El tipo de vehículo no existe con ID: " + createRateDto.getTypeId()));
 
-        // Verificar que no exista una tarifa duplicada
-        if (rateRepository.existsByType_TypeIdAndSeasonAndRentalDuration(
-                createRateDto.getTypeId(),
-                createRateDto.getSeason(),
-                createRateDto.getRentalDuration())) {
-            throw new IllegalArgumentException("Ya existe una tarifa para este tipo de vehículo, temporada y duración.");
+        // Validar que la temporada exista
+        Season season = seasonRepository.findById(createRateDto.getSeasonId())
+                .orElseThrow(() -> new EntityNotFoundException("La temporada no existe con ID: " + createRateDto.getSeasonId()));
+
+        // Validar que no exista una tarifa duplicada
+        boolean exists = rateRepository.existsByTypeAndSeasonAndRentalDuration(
+                typeVehicle, season, Rate.RentalDuration.valueOf(createRateDto.getRentalDuration())
+        );
+        if (exists) {
+            throw new EntityExistsException("Ya existe una tarifa para este tipo de vehículo, temporada y duración");
         }
 
-        // Crear y guardar la tarifa
+        // Crear la nueva tarifa
         Rate rate = Rate.builder()
                 .type(typeVehicle)
-                .season(createRateDto.getSeason())
-                .rentalDuration(createRateDto.getRentalDuration())
+                .season(season)
+                .rentalDuration(Rate.RentalDuration.valueOf(createRateDto.getRentalDuration()))
                 .cost(createRateDto.getCost())
                 .active(createRateDto.isActive())
                 .build();
