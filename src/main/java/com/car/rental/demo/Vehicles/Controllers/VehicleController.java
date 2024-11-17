@@ -5,6 +5,7 @@ import com.car.rental.demo.Exceptions.ResourceNotFoundException;
 import com.car.rental.demo.Models.Vehicle;
 import com.car.rental.demo.Models.VehicleImage;
 import com.car.rental.demo.Vehicles.Dtos.VehicleDTO;
+import com.car.rental.demo.Vehicles.Dtos.VehicleGet;
 import com.car.rental.demo.Vehicles.Services.VehicleService;
 
 import jakarta.validation.Valid;
@@ -59,8 +60,8 @@ public class VehicleController {
 
     // Obtener todos los vehículos
     @GetMapping
-    public ResponseEntity<List<Vehicle>> getAllVehicles() {
-        List<Vehicle> vehicles = vehicleService.getAllVehicles();
+    public ResponseEntity<List<VehicleGet>> getAllVehicles() {
+        List<VehicleGet> vehicles = vehicleService.getAllVehicles();
         return ResponseEntity.ok(vehicles);
     }
 
