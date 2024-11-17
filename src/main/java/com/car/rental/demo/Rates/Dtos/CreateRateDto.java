@@ -1,8 +1,5 @@
 package com.car.rental.demo.Rates.Dtos;
 
-import com.car.rental.demo.Models.Rate.RentalDuration;
-import com.car.rental.demo.Models.Rate.Season;
-
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -14,10 +11,10 @@ public class CreateRateDto {
     private Long typeId;
 
     @NotNull(message = "La temporada es obligatoria")
-    private Season season; // HIGH, LOW
+    private Long seasonId;
 
     @NotNull(message = "La duración del alquiler es obligatoria")
-    private RentalDuration rentalDuration; // DAILY, WEEKLY, MONTHLY
+    private String rentalDuration; // DAILY, WEEKLY, MONTHLY
 
     @Min(value = 0, message = "El costo debe ser mayor o igual a 0")
     private double cost;
