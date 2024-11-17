@@ -21,7 +21,7 @@ public class ClientService {
         return clientRepository.findByIdNumber(idNumber).orElseThrow(() -> new IllegalArgumentException("Cliente no encontrado"));
     }
 
-    public List<Client> findAll() {
+    public List<Client> getAll() {
         return clientRepository.findAll();
     }
 
