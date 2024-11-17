@@ -32,42 +32,59 @@ import lombok.NoArgsConstructor;
 @Builder
 @Entity
 @Table(name = "vehicles")
-@JsonIdentityInfo(
-  generator = ObjectIdGenerators.PropertyGenerator.class, 
-  property = "vehicleId")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "vehicleId")
 public class Vehicle {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long vehicleId;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long vehicleId;
 
-    private String brand;
-    private String model;
-    private String licensePlate; // Matrícula
+  private String brand;
+  private String model;
+  private String licensePlate; // Matrícula
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private VehicleStatus status; // Available, In Maintenance, Rented
+  @Enumerated(EnumType.STRING)
+  @Column(nullable = false)
+  private VehicleStatus status; // Available, In Maintenance, Rented
 
-    @Builder.Default
-    private boolean active = true;
+  @Builder.Default
+  private boolean active = true;
 
-    @Temporal(TemporalType.DATE)
-    private Date acquisitionDate;
+  @Temporal(TemporalType.DATE)
+  private Date acquisitionDate;
 
-    private double mileage;
-    private String location;
+  private double mileage;
+  private String location;
+  private boolean airConditioning;
+  private int numberOfDoors;
+  @Enumerated(EnumType.STRING)
+  @Column(nullable = false)
+  private FuelType fuelType; // Gasolina, Híbrido, Eléctrico
 
-    @ManyToOne
-    @JoinColumn(name = "typeId", nullable = false)
-    private TypeVehicle type;
+  @Enumerated(EnumType.STRING)
+  @Column(nullable = false)
+  private TransmissionType transmissionType;
+  @ManyToOne
+  @JoinColumn(name = "typeId", nullable = false)
+  private TypeVehicle type;
 
-    @OneToMany(mappedBy = "vehicle", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<VehicleImage> images;
+  @OneToMany(mappedBy = "vehicle", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<VehicleImage> images;
 
-    public enum VehicleStatus {
-        AVAILABLE, // Disponible
-        IN_MAINTENANCE, // En mantenimiento
-        RENTED // Alquilado
-    }
+  public enum VehicleStatus {
+    AVAILABLE, // Disponible
+    IN_MAINTENANCE, // En mantenimiento
+    RENTED // Alquilado
+  }
+
+  public enum FuelType {
+    GASOLINE, // Gasolina
+    HYBRID, // Híbrido
+    ELECTRIC // Eléctrico
+  }
+
+  public enum TransmissionType {
+    MANUAL, // Manual
+    AUTOMATIC // Automática
+  }
 }

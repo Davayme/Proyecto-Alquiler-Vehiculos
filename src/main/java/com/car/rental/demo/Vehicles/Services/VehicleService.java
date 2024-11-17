@@ -30,8 +30,6 @@ public class VehicleService {
     private TypeVehicleRepository typeRepository;
 
 
-    
-
     // Crear un vehículo
     public Vehicle createVehicle(VehicleDTO vehicleDTO) {
         TypeVehicle type = typeRepository.findById(vehicleDTO.getTypeId())
@@ -46,6 +44,10 @@ public class VehicleService {
         vehicle.setMileage(vehicleDTO.getMileage());
         vehicle.setLocation(vehicleDTO.getLocation());
         vehicle.setType(type);
+        vehicle.setAirConditioning(vehicleDTO.getAirConditioning());
+        vehicle.setNumberOfDoors(vehicleDTO.getNumberOfDoors());
+        vehicle.setFuelType(vehicleDTO.getFuelType());
+        vehicle.setTransmissionType(vehicleDTO.getTransmissionType());
         return vehicleRepository.save(vehicle);
     }
 
@@ -69,6 +71,10 @@ public class VehicleService {
         dto.setMileage(vehicle.getMileage());
         dto.setLocation(vehicle.getLocation());
         dto.setType(vehicle.getType().getName());
+        dto.setAirConditioning(vehicle.isAirConditioning());
+        dto.setNumberOfDoors(vehicle.getNumberOfDoors());
+        dto.setFuelType(vehicle.getFuelType());
+        dto.setTransmissionType(vehicle.getTransmissionType());
 
         // Calcular la tarifa diaria basada en la temporada actual
         double dailyRate = calculateDailyRate(vehicle);
@@ -140,6 +146,11 @@ public class VehicleService {
         vehicle.setMileage(vehicleDTO.getMileage());
         vehicle.setLocation(vehicleDTO.getLocation());
         vehicle.setType(type);
+        vehicle.setAirConditioning(vehicleDTO.getAirConditioning());
+        vehicle.setNumberOfDoors(vehicleDTO.getNumberOfDoors());
+        vehicle.setFuelType(vehicleDTO.getFuelType());
+        vehicle.setTransmissionType(vehicleDTO.getTransmissionType());
+        
         return vehicleRepository.save(vehicle);
     }
 
