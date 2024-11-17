@@ -24,6 +24,6 @@ public class VehicleGet {
     private double mileage;
     private String location;
     private String type; // Solo el nombre del tipo de vehículo
-    private List<RateDTO> rates;
+    private double dailyRate;
     private List<VehicleImageGetDto> images;
 }

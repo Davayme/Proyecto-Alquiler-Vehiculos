@@ -54,8 +54,13 @@ public class Rate {
     private Date endDate; // Fecha opcional de fin de la tarifa
 
     public enum Season {
-        HIGH, // Temporada alta
-        LOW   // Temporada baja
+        NORMAL,    // Temporada regular o sin eventos específicos
+        CHRISTMAS, // Temporada de Navidad
+        SUMMER,    // Temporada de verano
+        SPRING,    // Temporada de primavera
+        AUTUMN,    // Temporada de otoño
+        EASTER,    // Temporada de Semana Santa
+        HOLIDAY    // Temporadas de vacaciones generales
     }
 
     public enum RentalDuration {

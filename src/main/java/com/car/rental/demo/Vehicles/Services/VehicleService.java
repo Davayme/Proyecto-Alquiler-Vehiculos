@@ -67,8 +67,9 @@ public class VehicleService {
         dto.setMileage(vehicle.getMileage());
         dto.setLocation(vehicle.getLocation());
         dto.setType(vehicle.getType().getName());
+        dto.setDailyRate(200);
         // Convertir las tarifas
-        if (vehicle.getType().getRates() != null) {
+/*         if (vehicle.getType().getRates() != null) {
             List<RateDTO> rateDTOs = vehicle.getType().getRates().stream()
                     .map(rate -> {
                         RateDTO rateDTO = new RateDTO();
@@ -80,7 +81,7 @@ public class VehicleService {
                     })
                     .collect(Collectors.toList());
             dto.setRates(rateDTOs);
-        }
+        } */
 
         // Convertir las imágenes
         if (vehicle.getImages() != null) {
