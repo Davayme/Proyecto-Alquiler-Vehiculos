@@ -34,17 +34,27 @@ public class AuthService {
 
         // Paso 2: Decodificar el token para obtener el UID del usuario
         FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(firebaseToken);
+        System.out.println(decodedToken + "\n"+ decodedToken.getUid());
         String uid = decodedToken.getUid();
 
         // Paso 3: Buscar al usuario en la base de datos para obtener su rol
-        User user = userRepository.findByUidFirebase(uid)
-                .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado en la base de datos"));
+        User user = userRepository.findByUidFirebase(uid).orElse(null);
+        if (user == null) {
+            User userAux = User.builder()
+                .uidFirebase(uid)
+                .email(loginRequestDto.getEmail())
+                //.phone(createUserDto.getPhone()) 
+                .role(User.Role.CLIENT)
+                .active(true)
+                .build();
+                user = userRepository.save(userAux);
+        }
 
         // Paso 4: Construir el nombre completo
-        String fullName = user.getFirstName() + " " + user.getLastName();
+        //String fullName = user.getFirstName() + " " + user.getLastName();
 
         // Paso 5: Devolver el token, el rol, el nombre completo y el correo en el DTO de respuesta
-        return new LoginResponseDto("Bearer " + firebaseToken, user.getRole().name(), fullName, user.getEmail());
+        return new LoginResponseDto("Bearer " + firebaseToken, user.getRole().name(), user.getEmail());
     }
 
     private String authenticateWithFirebase(String email, String password) {
