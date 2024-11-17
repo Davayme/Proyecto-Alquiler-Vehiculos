@@ -12,11 +12,9 @@ import com.car.rental.demo.Models.Season;
 import com.car.rental.demo.Models.TypeVehicle;
 import com.car.rental.demo.Models.Vehicle;
 import com.car.rental.demo.Models.VehicleImage;
-import com.car.rental.demo.Rates.SeasonRepository;
 import com.car.rental.demo.Vehicles.VehicleImageRepository;
 import com.car.rental.demo.Vehicles.VehicleRepository;
 import com.car.rental.demo.Vehicles.TypeVehicleRepository;
-import com.car.rental.demo.Vehicles.Dtos.RateDTO;
 import com.car.rental.demo.Vehicles.Dtos.VehicleDTO;
 import com.car.rental.demo.Vehicles.Dtos.VehicleGet;
 import com.car.rental.demo.Vehicles.Dtos.VehicleImageGetDto;
@@ -31,8 +29,7 @@ public class VehicleService {
     @Autowired
     private TypeVehicleRepository typeRepository;
 
-    @Autowired
-    private SeasonRepository seasonRepository;
+
     
 
     // Crear un vehículo
@@ -122,7 +119,7 @@ public class VehicleService {
                    (month < endMonth || (month == endMonth && day <= endDay));
         }
     }
-    
+
     // Obtener un vehículo por ID
     public Optional<Vehicle> getVehicleById(Long vehicleId) {
         return vehicleRepository.findById(vehicleId);
