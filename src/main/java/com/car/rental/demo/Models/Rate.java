@@ -32,9 +32,9 @@ public class Rate {
     @JoinColumn(name = "typeId", nullable = false)
     private TypeVehicle type; // Relación con el tipo de vehículo
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private Season season; // Temporada: HIGH, LOW
+    @ManyToOne
+    @JoinColumn(name = "seasonId", nullable = false)
+    private Season season; // Relación con la temporada // Temporada: HIGH, LOW
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -52,11 +52,6 @@ public class Rate {
 
     @Temporal(TemporalType.DATE)
     private Date endDate; // Fecha opcional de fin de la tarifa
-
-    public enum Season {
-        HIGH, // Temporada alta
-        LOW   // Temporada baja
-    }
 
     public enum RentalDuration {
         DAILY,   // Por día
