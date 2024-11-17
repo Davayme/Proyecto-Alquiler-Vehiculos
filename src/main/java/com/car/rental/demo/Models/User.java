@@ -13,8 +13,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "users", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"id"}), 
+@Table(name = "users", uniqueConstraints = { 
         @UniqueConstraint(columnNames = {"uidFirebase"})
 })
 public class User {
@@ -26,21 +25,21 @@ public class User {
     @Column(nullable = false, unique = true)
     private String uidFirebase;
 
-    @Column(nullable = false)
-    private String firstName;
+    // @Column(nullable = false)
+    // private String firstName;
 
-    @Column(nullable = false)
-    private String lastName;
+    // @Column(nullable = false)
+    // private String lastName;
 
     @Column(nullable = false, unique = true)
     private String email;
 
-    @Column(nullable = false, unique = true)
-    private String phone;
-
+    // @Column(nullable = false, unique = true)
+    // private String phone;
+    @Builder.Default
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Role role; 
+    private Role role = Role.CLIENT; 
 
     @Builder.Default
     @Column(columnDefinition = "boolean default true")
