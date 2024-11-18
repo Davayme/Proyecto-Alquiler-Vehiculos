@@ -28,6 +28,7 @@ public class SecurityConfig {
                 .requestMatchers("/auth/login").permitAll()
                 .requestMatchers(HttpMethod.POST, "/users").permitAll()
                 .requestMatchers(HttpMethod.GET, "/vehicles/**").hasAnyRole("ADMIN", "CLIENT") // Permitir GET a CLIENT y ADMIN
+                .requestMatchers(HttpMethod.GET, "/type-vehicles/**").hasAnyRole("ADMIN", "CLIENT") // Permitir GET a CLIENT y ADMIN
                 .requestMatchers("/vehicles/**").hasRole("ADMIN") // Permitir otros métodos solo a ADMIN
                 .requestMatchers("/users/**").hasRole("ADMIN")
                 .requestMatchers("/type-vehicles/**").hasRole("ADMIN")
