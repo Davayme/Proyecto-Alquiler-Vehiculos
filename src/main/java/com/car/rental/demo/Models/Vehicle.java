@@ -41,6 +41,7 @@ public class Vehicle {
 
   private String brand;
   private String model;
+  @Column(unique = true, nullable = false)
   private String licensePlate; // Matrícula
 
   @Enumerated(EnumType.STRING)
