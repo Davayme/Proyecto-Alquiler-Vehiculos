@@ -37,9 +37,6 @@ public class FirebaseAuthenticationFilter extends OncePerRequestFilter {
 
             // Buscar el usuario en la base de datos
             User user = userService.findByUidFirebase(uid).orElseThrow(() -> new SecurityException("Unauthorized"));
-            if (!user.getRole().equals(User.Role.ADMIN)) {
-                throw new SecurityException("Unauthorized");
-            }
 
             // Autenticar el usuario en el contexto de Spring Security
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
