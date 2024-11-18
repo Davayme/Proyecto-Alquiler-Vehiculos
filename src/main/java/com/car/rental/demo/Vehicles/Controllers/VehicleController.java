@@ -3,20 +3,29 @@ package com.car.rental.demo.Vehicles.Controllers;
 import com.car.rental.demo.Cloudinary.CloudinaryService;
 import com.car.rental.demo.Exceptions.ResourceNotFoundException;
 import com.car.rental.demo.Models.Vehicle;
+import com.car.rental.demo.Models.Vehicle.FuelType;
+import com.car.rental.demo.Models.Vehicle.TransmissionType;
+import com.car.rental.demo.Models.Vehicle.VehicleStatus;
 import com.car.rental.demo.Models.VehicleImage;
 import com.car.rental.demo.Vehicles.Dtos.VehicleDTO;
 import com.car.rental.demo.Vehicles.Dtos.VehicleGet;
 import com.car.rental.demo.Vehicles.Services.VehicleService;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
+import jakarta.validation.constraints.PositiveOrZero;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -32,10 +41,44 @@ public class VehicleController {
 
     // Crear un nuevo vehículo
     @PostMapping
-    public ResponseEntity<?> createVehicle(@Valid @RequestBody VehicleDTO vehicleDTO) {
-        try {
+    public ResponseEntity<?> createVehicle(
+        @RequestParam @NotBlank(message = "Brand is required") String brand,
+        @RequestParam @NotBlank(message = "Model is required") String model,
+        @RequestParam @NotBlank(message = "License Plate is required") String licensePlate,
+        @RequestParam @NotNull(message = "Type ID is required") Long typeId,
+        @RequestParam @NotNull(message = "Status is required") VehicleStatus status,
+         @RequestParam @PastOrPresent(message = "Acquisition date must be in the past or present") 
+        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date acquisitionDate,
+        @RequestParam @PositiveOrZero(message = "Mileage must be zero or positive") double mileage,
+        @RequestParam @NotBlank(message = "Location is required") String location,
+        @RequestParam @NotNull(message = "Air Conditioning is required") Boolean airConditioning,
+        @RequestParam @NotNull(message = "Number of Doors is required") Integer numberOfDoors,
+        @RequestParam @NotNull(message = "Fuel Type is required") FuelType fuelType,
+        @RequestParam @NotNull(message = "Transmission Type is required") TransmissionType transmissionType,
+        @RequestParam("images") MultipartFile[] images) {
+    try {
+        VehicleDTO vehicleDTO = VehicleDTO.builder()
+        .brand(brand)
+        .model(model)
+        .licensePlate(licensePlate)
+        .typeId(typeId)
+        .status(status)
+        .acquisitionDate(acquisitionDate)
+        .mileage(mileage)
+        .location(location)
+        .airConditioning(airConditioning)
+        .numberOfDoors(numberOfDoors)
+        .fuelType(fuelType)
+        .transmissionType(transmissionType)
+        .build();
             Vehicle vehicle = vehicleService.createVehicle(vehicleDTO);
-            return ResponseEntity.status(HttpStatus.CREATED).body(vehicle);
+            for (MultipartFile image : images) {
+                String imageUrl = cloudinaryService.uploadImage(image);
+                vehicleService.createVehicleImage(vehicle.getVehicleId(), imageUrl);
+            }
+            Vehicle vehicleAux = vehicleService.getVehicleById(vehicle.getVehicleId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Vehicle not found with ID " + vehicle.getVehicleId()));
+            return ResponseEntity.status(HttpStatus.CREATED).body(vehicleAux);
         } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error al crear el vehículo: " + ex.getMessage());
@@ -43,21 +86,21 @@ public class VehicleController {
     }
 
     // Insertar imagenes
-    @PostMapping("/{id}")
-    public ResponseEntity<?> createVehicleImage(@PathVariable Long id, @RequestParam("images") MultipartFile[] images) {
-        try {
-            for (MultipartFile image : images) {
-                String imageUrl = cloudinaryService.uploadImage(image);
-                vehicleService.createVehicleImage(id, imageUrl);
-            }
-            Vehicle vehicle = vehicleService.getVehicleById(id)
-                    .orElseThrow(() -> new ResourceNotFoundException("Vehicle not found with ID " + id));
-            return ResponseEntity.status(HttpStatus.CREATED).body(vehicle);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error al subir la imagen: " + e.getMessage());
-        }
-    }
+    // @PostMapping("/{id}")
+    // public ResponseEntity<?> createVehicleImage(@PathVariable Long id, @RequestParam("images") MultipartFile[] images) {
+    //     try {
+    //         for (MultipartFile image : images) {
+    //             String imageUrl = cloudinaryService.uploadImage(image);
+    //             vehicleService.createVehicleImage(id, imageUrl);
+    //         }
+    //         Vehicle vehicle = vehicleService.getVehicleById(id)
+    //                 .orElseThrow(() -> new ResourceNotFoundException("Vehicle not found with ID " + id));
+    //         return ResponseEntity.status(HttpStatus.CREATED).body(vehicle);
+    //     } catch (Exception e) {
+    //         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+    //                 .body("Error al subir la imagen: " + e.getMessage());
+    //     }
+    // }
 
     // Obtener todos los vehículos
     @GetMapping
