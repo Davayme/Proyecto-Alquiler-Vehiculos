@@ -20,17 +20,16 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf.disable())
-            .cors(cors -> cors.disable()) // Desactivar CSRF si estás usando solo API
+            .csrf(csrf -> csrf.disable())  // Deshabilitar CSRF
+            .cors()  // Habilitar soporte de CORS
+            .and()
             .authorizeHttpRequests(auth -> auth
-             // Permitir acceso sin autenticación a la ruta de login
+                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()  // Permitir preflight requests
                 .requestMatchers("/auth/login").permitAll()
                 .requestMatchers(HttpMethod.POST, "/users").permitAll()
-                 
                 .requestMatchers("/vehicles/**").hasRole("ADMIN")
-                
                 .requestMatchers("/users/**").hasRole("ADMIN")
-                .requestMatchers("/type-vehicles/**").hasRole("ADMIN") 
+                .requestMatchers("/type-vehicles/**").hasRole("ADMIN")
                 .requestMatchers("/rates").hasRole("ADMIN")
                 .requestMatchers("/clients/**").hasRole("ADMIN")
                 .anyRequest().authenticated()  // Requiere autenticación para cualquier otra solicitud
