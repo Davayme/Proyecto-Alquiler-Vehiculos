@@ -30,7 +30,6 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/vehicles/**").hasAnyRole("ADMIN", "CLIENT") // Permitir GET a CLIENT y ADMIN
                 .requestMatchers("/vehicles/**").hasRole("ADMIN") // Permitir otros métodos solo a ADMIN
                 .requestMatchers("/users/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.GET,"/type-vehicles/**").hasAnyRole("CLIENT", "ADMIN")
                 .requestMatchers("/type-vehicles/**").hasRole("ADMIN")
                 .requestMatchers("/rates").hasRole("ADMIN")
                 .requestMatchers("/clients/**").hasRole("ADMIN")
