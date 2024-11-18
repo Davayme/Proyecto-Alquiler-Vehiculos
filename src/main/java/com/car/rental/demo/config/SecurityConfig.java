@@ -30,7 +30,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET,"/vehicles/**").hasAnyRole("CLIENT", "ADMIN")
                 .requestMatchers("/vehicles/**").hasRole("ADMIN")
                 .requestMatchers("/users/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.GET,"/type-vehicles/**").hasRole("CLIENT", "ADMIN")
+                .requestMatchers(HttpMethod.GET,"/type-vehicles/**").hasAnyRole("CLIENT", "ADMIN")
                 .requestMatchers("/type-vehicles/**").hasRole("ADMIN")
                 .requestMatchers("/rates").hasRole("ADMIN")
                 .requestMatchers("/clients/**").hasRole("ADMIN")
