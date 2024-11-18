@@ -172,4 +172,10 @@ public class VehicleService {
                 .imageUrl(url)
                 .build());
     }
+
+    public void deleteVehicleImage(Long imageId) {
+        VehicleImage image = vehicleImageRepository.findById(imageId)
+                .orElseThrow(() -> new RuntimeException("Imagen no encontrada"));
+        vehicleImageRepository.delete(image);
+    }
 }

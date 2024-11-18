@@ -97,4 +97,14 @@ public class VehicleController {
                     .body("Error: " + ex.getMessage());
         }
     }
+
+    @DeleteMapping("/images/{imageId}")
+    public ResponseEntity<?> deleteVehicleImage(@PathVariable Long imageId) {
+        try {
+            vehicleService.deleteVehicleImage(imageId);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Imagen eliminada con éxito");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Error: " + e.getMessage());
+        }
+    }
 }
