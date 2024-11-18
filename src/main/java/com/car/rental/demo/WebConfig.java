@@ -18,6 +18,7 @@ public class WebConfig {
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")  // Métodos permitidos
                         .allowedHeaders("*")  // Permitir todos los encabezados
                         .allowCredentials(true);  // Permitir credenciales (Authorization, cookies)
+
             }
         };
     }
