@@ -2,6 +2,7 @@ package com.car.rental.demo.Vehicles.Controllers;
 
 import com.car.rental.demo.Models.TypeVehicle;
 import com.car.rental.demo.Vehicles.Dtos.CreateTypeVehicleDto;
+import com.car.rental.demo.Vehicles.Dtos.TypeVehicleDTO;
 import com.car.rental.demo.Vehicles.Dtos.UpdateTypeVehicleDto;
 import com.car.rental.demo.Vehicles.Services.TypeVehicleService;
 
@@ -35,8 +36,9 @@ public class TypeVehicleController {
 
     // Obtener todos los tipos de vehículos
     @GetMapping
-    public ResponseEntity<List<TypeVehicle>> getAllTypeVehicles() {
-        return ResponseEntity.ok(typeVehicleService.getAllTypeVehicles());
+    public ResponseEntity<List<TypeVehicleDTO>> getAllTypeVehicles() {
+        List<TypeVehicleDTO> typeVehicles = typeVehicleService.getAllTypeVehicles();
+        return ResponseEntity.ok(typeVehicles);
     }
 
     // Editar un tipo de vehículo existente
