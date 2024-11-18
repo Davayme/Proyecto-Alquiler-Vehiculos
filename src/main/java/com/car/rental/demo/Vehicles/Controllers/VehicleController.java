@@ -42,21 +42,22 @@ public class VehicleController {
         }
     }
 
-    //Insertar imagenes
+    // Insertar imagenes
     @PostMapping("/{id}")
-    public ResponseEntity<?> createVehicleImage(@PathVariable Long id, @RequestParam("file") MultipartFile file) {
+    public ResponseEntity<?> createVehicleImage(@PathVariable Long id, @RequestParam("images") MultipartFile[] images) {
         try {
-            // Procesar la imagen usando el servicio de Cloudinary
-            String imageUrl = cloudinaryService.uploadImage(file);
-            VehicleImage vehicleImage = vehicleService.createVehicleImage(id, imageUrl);
-    
-            return ResponseEntity.status(HttpStatus.CREATED).body(vehicleImage);
+            for (MultipartFile image : images) {
+                String imageUrl = cloudinaryService.uploadImage(image);
+                vehicleService.createVehicleImage(id, imageUrl);
+            }
+            Vehicle vehicle = vehicleService.getVehicleById(id)
+                    .orElseThrow(() -> new ResourceNotFoundException("Vehicle not found with ID " + id));
+            return ResponseEntity.status(HttpStatus.CREATED).body(vehicle);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error al subir la imagen: " + e.getMessage());
         }
     }
-    
 
     // Obtener todos los vehículos
     @GetMapping
@@ -75,7 +76,8 @@ public class VehicleController {
 
     // Actualizar un vehículo por ID
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateVehicle(@PathVariable("id") Long vehicleId, @Valid @RequestBody VehicleDTO vehicleDTO) {
+    public ResponseEntity<?> updateVehicle(@PathVariable("id") Long vehicleId,
+            @Valid @RequestBody VehicleDTO vehicleDTO) {
         try {
             Vehicle updatedVehicle = vehicleService.updateVehicle(vehicleId, vehicleDTO);
             return ResponseEntity.ok(updatedVehicle);
