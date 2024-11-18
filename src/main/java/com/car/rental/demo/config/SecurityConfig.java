@@ -27,11 +27,13 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()  // Permitir preflight requests
                 .requestMatchers("/auth/login").permitAll()
                 .requestMatchers(HttpMethod.POST, "/users").permitAll()
-                .requestMatchers(HttpMethod.GET,"/vehicles/**").hasAnyRole("CLIENT", "ADMIN")
+                
                 .requestMatchers("/vehicles/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.GET,"/vehicles/**").hasAnyRole("CLIENT", "ADMIN")
                 .requestMatchers("/users/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.GET,"/type-vehicles/**").hasAnyRole("CLIENT", "ADMIN")
+                
                 .requestMatchers("/type-vehicles/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.GET,"/type-vehicles/**").hasAnyRole("CLIENT", "ADMIN")
                 .requestMatchers("/rates").hasRole("ADMIN")
                 .requestMatchers("/clients/**").hasRole("ADMIN")
                 .anyRequest().authenticated()  // Requiere autenticación para cualquier otra solicitud
