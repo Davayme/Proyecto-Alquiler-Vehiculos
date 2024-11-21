@@ -6,7 +6,6 @@ import com.car.rental.demo.Models.Vehicle;
 import com.car.rental.demo.Models.Vehicle.FuelType;
 import com.car.rental.demo.Models.Vehicle.TransmissionType;
 import com.car.rental.demo.Models.Vehicle.VehicleStatus;
-import com.car.rental.demo.Models.VehicleImage;
 import com.car.rental.demo.Vehicles.Dtos.VehicleDTO;
 import com.car.rental.demo.Vehicles.Dtos.VehicleGet;
 import com.car.rental.demo.Vehicles.Services.VehicleService;
