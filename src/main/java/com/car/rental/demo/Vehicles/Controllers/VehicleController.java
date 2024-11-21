@@ -86,21 +86,21 @@ public class VehicleController {
     }
 
     // Insertar imagenes
-    // @PostMapping("/{id}")
-    // public ResponseEntity<?> createVehicleImage(@PathVariable Long id, @RequestParam("images") MultipartFile[] images) {
-    //     try {
-    //         for (MultipartFile image : images) {
-    //             String imageUrl = cloudinaryService.uploadImage(image);
-    //             vehicleService.createVehicleImage(id, imageUrl);
-    //         }
-    //         Vehicle vehicle = vehicleService.getVehicleById(id)
-    //                 .orElseThrow(() -> new ResourceNotFoundException("Vehicle not found with ID " + id));
-    //         return ResponseEntity.status(HttpStatus.CREATED).body(vehicle);
-    //     } catch (Exception e) {
-    //         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-    //                 .body("Error al subir la imagen: " + e.getMessage());
-    //     }
-    // }
+    @PostMapping("/{id}")
+    public ResponseEntity<?> createVehicleImage(@PathVariable Long id, @RequestParam("images") MultipartFile[] images) {
+        try {
+            for (MultipartFile image : images) {
+                String imageUrl = cloudinaryService.uploadImage(image);
+                vehicleService.createVehicleImage(id, imageUrl);
+            }
+            Vehicle vehicle = vehicleService.getVehicleById(id)
+                    .orElseThrow(() -> new ResourceNotFoundException("Vehicle not found with ID " + id));
+            return ResponseEntity.status(HttpStatus.CREATED).body(vehicle);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al subir la imagen: " + e.getMessage());
+        }
+    }
 
     // Obtener todos los vehículos
     @GetMapping
