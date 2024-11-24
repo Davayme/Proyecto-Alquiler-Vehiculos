@@ -50,7 +50,7 @@ public class User {
     private Date createdAt;
 
     @PrePersist
-    protected void onCreate() {
+    public void onCreate() {
         createdAt = new Date();
     }
 
