@@ -2,9 +2,13 @@ package com.car.rental.demo.Auth.Dtos;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 
 @Data
+@Builder
+@AllArgsConstructor
 public class LoginRequestDto {
 
     @NotBlank(message = "El correo electrónico es obligatorio")
