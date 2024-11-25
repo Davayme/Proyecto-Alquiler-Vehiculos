@@ -1,4 +1,4 @@
-package com.car.rental.demo.Vehicles;
+package com.car.rental.demo.Vehicles.Dtos;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

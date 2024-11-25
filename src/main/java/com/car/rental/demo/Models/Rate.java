@@ -17,45 +17,43 @@ import lombok.NoArgsConstructor;
 @Builder
 @Entity
 @Table(name = "rates", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"typeId", "season", "rentalDuration"})
+    @UniqueConstraint(columnNames = { "typeId", "seasonId", "rentalDuration" })
 })
-@JsonIdentityInfo(
-  generator = ObjectIdGenerators.PropertyGenerator.class, 
-  property = "rateId")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "rateId")
 public class Rate {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long rateId;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long rateId;
 
-    @ManyToOne
-    @JoinColumn(name = "typeId", nullable = false)
-    private TypeVehicle type; // Relación con el tipo de vehículo
+  @ManyToOne
+  @JoinColumn(name = "typeId", nullable = false)
+  private TypeVehicle type; // Relación con el tipo de vehículo
 
-    @ManyToOne
-    @JoinColumn(name = "seasonId", nullable = false)
-    private Season season; // Relación con la temporada // Temporada: HIGH, LOW
+  @ManyToOne
+  @JoinColumn(name = "seasonId", nullable = false)
+  private Season season; // Relación con la temporada
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private RentalDuration rentalDuration; // Duración: DAILY, WEEKLY, MONTHLY
+  @Enumerated(EnumType.STRING)
+  @Column(nullable = false)
+  private RentalDuration rentalDuration; // Duración: DAILY, WEEKLY, MONTHLY
 
-    @Column(nullable = false)
-    private double cost; // Precio de la tarifa
+  @Column(nullable = false)
+  private double cost; // Precio de la tarifa
 
-    @Builder.Default
-    @Column(nullable = false, columnDefinition = "boolean default true")
-    private boolean active = true;
+  @Builder.Default
+  @Column(nullable = false, columnDefinition = "boolean default true")
+  private boolean active = true;
 
-    @Temporal(TemporalType.DATE)
-    private Date startDate; // Fecha opcional de inicio de la tarifa
+  @Temporal(TemporalType.DATE)
+  private Date startDate; // Fecha opcional de inicio de la tarifa
 
-    @Temporal(TemporalType.DATE)
-    private Date endDate; // Fecha opcional de fin de la tarifa
+  @Temporal(TemporalType.DATE)
+  private Date endDate; // Fecha opcional de fin de la tarifa
 
-    public enum RentalDuration {
-        DAILY,   // Por día
-        WEEKLY,  // Por semana
-        MONTHLY  // Por mes
-    }
+  public enum RentalDuration {
+    DAILY, // Por día
+    WEEKLY, // Por semana
+    MONTHLY // Por mes
+  }
 }
