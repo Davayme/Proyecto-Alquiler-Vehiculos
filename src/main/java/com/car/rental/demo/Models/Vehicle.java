@@ -42,11 +42,11 @@ public class Vehicle {
   private String brand;
   private String model;
   @Column(unique = true, nullable = false)
-  private String licensePlate; // Matrícula
+  private String licensePlate;
 
   @Enumerated(EnumType.STRING)
   @Column(nullable = false)
-  private VehicleStatus status; // Available, In Maintenance, Rented
+  private VehicleStatus status; 
 
   @Builder.Default
   private boolean active = true;
@@ -60,7 +60,7 @@ public class Vehicle {
   private int numberOfDoors;
   @Enumerated(EnumType.STRING)
   @Column(nullable = false)
-  private FuelType fuelType; // Gasolina, Híbrido, Eléctrico
+  private FuelType fuelType; 
 
   @Enumerated(EnumType.STRING)
   @Column(nullable = false)
@@ -73,19 +73,19 @@ public class Vehicle {
   private List<VehicleImage> images;
 
   public enum VehicleStatus {
-    AVAILABLE, // Disponible
-    IN_MAINTENANCE, // En mantenimiento
-    RENTED // Alquilado
+    AVAILABLE, 
+    IN_MAINTENANCE, 
+    RENTED 
   }
 
   public enum FuelType {
-    GASOLINE, // Gasolina
-    HYBRID, // Híbrido
-    ELECTRIC // Eléctrico
+    GASOLINE, 
+    HYBRID, 
+    ELECTRIC 
   }
 
   public enum TransmissionType {
-    MANUAL, // Manual
-    AUTOMATIC // Automática
+    MANUAL, 
+    AUTOMATIC 
   }
 }
