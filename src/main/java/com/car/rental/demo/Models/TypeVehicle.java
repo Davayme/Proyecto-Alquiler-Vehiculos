@@ -32,15 +32,15 @@ public class TypeVehicle {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long typeId;
 
-    private String name; // Compacto, SUV, Pickup, etc.
+    private String name; 
     private String description;
 
     @OneToMany(mappedBy = "type", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
-    private List<Vehicle> vehicles; // Relación con vehículos
+    private List<Vehicle> vehicles;
 
     @OneToMany(mappedBy = "type", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Rate> rates; // Relación con tarifas
+    private List<Rate> rates;
 
     public void setRates(List<Rate> rates) {
         this.rates = rates;

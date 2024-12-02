@@ -2,11 +2,12 @@ package com.car.rental.demo.Vehicles.Controllers;
 
 import com.car.rental.demo.Cloudinary.CloudinaryService;
 import com.car.rental.demo.Exceptions.ResourceNotFoundException;
+import com.car.rental.demo.Models.Brand;
+import com.car.rental.demo.Models.Model;
 import com.car.rental.demo.Models.Vehicle;
 import com.car.rental.demo.Models.Vehicle.FuelType;
 import com.car.rental.demo.Models.Vehicle.TransmissionType;
 import com.car.rental.demo.Models.Vehicle.VehicleStatus;
-import com.car.rental.demo.Models.VehicleImage;
 import com.car.rental.demo.Vehicles.Dtos.VehicleDTO;
 import com.car.rental.demo.Vehicles.Dtos.VehicleGet;
 import com.car.rental.demo.Vehicles.Services.VehicleService;
@@ -151,5 +152,18 @@ public class VehicleController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Error: " + e.getMessage());
         }
+    }
+
+    @GetMapping("/brands")
+    public ResponseEntity<List<Brand>> getAllBrands() {
+        List<Brand> brands = vehicleService.getAllBrands();
+        return ResponseEntity.ok(brands);
+    }
+
+    @GetMapping("/models/{id}")
+    public ResponseEntity<?> getBrandById(@PathVariable Long id) {
+        Brand brand = vehicleService.getBrandById(id);
+        List<Model> models = vehicleService.getModelsByBrand(brand);
+        return ResponseEntity.ok(models);
     }
 }
