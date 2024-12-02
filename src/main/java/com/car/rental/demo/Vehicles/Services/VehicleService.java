@@ -7,14 +7,18 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.car.rental.demo.Models.Brand;
+import com.car.rental.demo.Models.Model;
 import com.car.rental.demo.Models.Rate;
 import com.car.rental.demo.Models.Season;
 import com.car.rental.demo.Models.TypeVehicle;
 import com.car.rental.demo.Models.Vehicle;
 import com.car.rental.demo.Models.VehicleImage;
 import com.car.rental.demo.Vehicles.VehicleImageRepository;
+import com.car.rental.demo.Vehicles.VehicleModelRepository;
 import com.car.rental.demo.Vehicles.VehicleRepository;
 import com.car.rental.demo.Vehicles.TypeVehicleRepository;
+import com.car.rental.demo.Vehicles.VehicleBrandRepository;
 import com.car.rental.demo.Vehicles.Dtos.VehicleDTO;
 import com.car.rental.demo.Vehicles.Dtos.VehicleGet;
 import com.car.rental.demo.Vehicles.Dtos.VehicleImageGetDto;
@@ -25,10 +29,12 @@ public class VehicleService {
     private VehicleRepository vehicleRepository;
     @Autowired
     private VehicleImageRepository vehicleImageRepository;
-
     @Autowired
     private TypeVehicleRepository typeRepository;
-
+    @Autowired
+    private VehicleBrandRepository brandRepository;
+    @Autowired
+    private VehicleModelRepository modelRepository;
 
     // Crear un vehículo
     public Vehicle createVehicle(VehicleDTO vehicleDTO) {
@@ -177,5 +183,13 @@ public class VehicleService {
         VehicleImage image = vehicleImageRepository.findById(imageId)
                 .orElseThrow(() -> new RuntimeException("Imagen no encontrada"));
         vehicleImageRepository.delete(image);
+    }
+
+    public List<Brand> getAllBrands() {
+        return brandRepository.findAll();
+    }
+
+    public List<Model> getModelsByBrand(Long brandId) {
+        return modelRepository.findByBrandId(brandId);
     }
 }
