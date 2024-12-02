@@ -9,5 +9,5 @@ import com.car.rental.demo.Models.Brand;
 import com.car.rental.demo.Models.Model;
 @Repository
 public interface VehicleModelRepository extends JpaRepository<Model, Long>{
-    List<Model> findByBrandId(Long brandId);
+    List<Model> findByBrandId(Brand brandId);
 }

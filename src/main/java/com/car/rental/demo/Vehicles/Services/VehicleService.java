@@ -188,8 +188,12 @@ public class VehicleService {
     public List<Brand> getAllBrands() {
         return brandRepository.findAll();
     }
+    public Brand getBrandById(Long brandId) {
+        return brandRepository.findById(brandId)
+                .orElseThrow(() -> new RuntimeException("Marca no encontrada"));
+    }
 
-    public List<Model> getModelsByBrand(Long brandId) {
+    public List<Model> getModelsByBrand(Brand brandId) {
         return modelRepository.findByBrandId(brandId);
     }
 }

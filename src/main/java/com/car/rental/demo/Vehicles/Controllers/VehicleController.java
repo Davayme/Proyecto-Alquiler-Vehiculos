@@ -162,7 +162,8 @@ public class VehicleController {
 
     @GetMapping("/models/{id}")
     public ResponseEntity<?> getBrandById(@PathVariable Long id) {
-        List<Model> models = vehicleService.getModelsByBrand(id);
+        Brand brand = vehicleService.getBrandById(id);
+        List<Model> models = vehicleService.getModelsByBrand(brand);
         return ResponseEntity.ok(models);
     }
 }
