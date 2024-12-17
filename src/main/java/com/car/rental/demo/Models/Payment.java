@@ -28,5 +28,10 @@ public class Payment {
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date paymentDate;
+    @Enumerated(EnumType.STRING)
+    private TypePayment typePayment;
 
+    public enum TypePayment {
+        RENTAL, RETURN
+    }
 }
