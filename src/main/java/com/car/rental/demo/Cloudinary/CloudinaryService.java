@@ -25,6 +25,7 @@ public class CloudinaryService {
                 "api_secret", dotenv.get("CLOUDINARY_API_SECRET")));
     }
 
+    @SuppressWarnings("rawtypes")
     public String uploadImage(MultipartFile file) throws IOException {
         Map uploadResult = cloudinary.uploader().upload(file.getBytes(),
                 ObjectUtils.asMap(

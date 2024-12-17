@@ -41,19 +41,24 @@ public class VehicleService {
         TypeVehicle type = typeRepository.findById(vehicleDTO.getTypeId())
                 .orElseThrow(() -> new RuntimeException("Tipo de vehículo no encontrado"));
 
-        Vehicle vehicle = new Vehicle();
-        vehicle.setBrand(vehicleDTO.getBrand());
-        vehicle.setModel(vehicleDTO.getModel());
-        vehicle.setLicensePlate(vehicleDTO.getLicensePlate());
-        vehicle.setStatus(vehicleDTO.getStatus());
-        vehicle.setAcquisitionDate(vehicleDTO.getAcquisitionDate());
-        vehicle.setMileage(vehicleDTO.getMileage());
-        vehicle.setLocation(vehicleDTO.getLocation());
-        vehicle.setType(type);
-        vehicle.setAirConditioning(vehicleDTO.getAirConditioning());
-        vehicle.setNumberOfDoors(vehicleDTO.getNumberOfDoors());
-        vehicle.setFuelType(vehicleDTO.getFuelType());
-        vehicle.setTransmissionType(vehicleDTO.getTransmissionType());
+        Vehicle vehicle = Vehicle.builder()
+        .brand(vehicleDTO.getBrand())
+        .model(vehicleDTO.getModel())
+        .licensePlate(vehicleDTO.getLicensePlate())
+        .status(vehicleDTO.getStatus())
+        .acquisitionDate(vehicleDTO.getAcquisitionDate())
+        .mileage(vehicleDTO.getMileage())
+        .location(vehicleDTO.getLocation())
+        .type(type)
+        .airConditioning(vehicleDTO.getAirConditioning())
+        .numberOfDoors(vehicleDTO.getNumberOfDoors())
+        .fuelType(vehicleDTO.getFuelType())
+        .transmissionType(vehicleDTO.getTransmissionType())
+        .build();
+
+        vehicle.setAutoChasis();
+        vehicle.setAutoEngine();
+
         return vehicleRepository.save(vehicle);
     }
 

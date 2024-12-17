@@ -36,6 +36,8 @@ public class SecurityConfig {
                 .requestMatchers("/type-vehicles/**").hasRole("ADMIN")
                 .requestMatchers("/rates").hasRole("ADMIN")
                 .requestMatchers("/clients/**").hasRole("ADMIN")
+                .requestMatchers("/rentals/**").hasAnyRole("ADMIN", "CLIENT")
+                .requestMatchers("/stripe/**").hasAnyRole("ADMIN", "CLIENT")
                 .anyRequest().authenticated() // Requiere autenticación para cualquier otra solicitud
             )
             .addFilterBefore(firebaseAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
