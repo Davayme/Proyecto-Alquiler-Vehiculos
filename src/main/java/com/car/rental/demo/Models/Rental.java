@@ -38,6 +38,7 @@ public class Rental {
     private Date endDate;
 
     private double totalAmount;
+    @Enumerated(EnumType.STRING)
     private RentalStatus status; // Reserved, In Progress, Completed
     
     @Builder.Default
