@@ -26,7 +26,7 @@ public class PaymentController {
             String cancelUrl = sessionDTO.getCancelUrl(); // Cambia según tu frontend
 
             // Crea la sesión
-            Session session = stripeService.createCheckoutSession(sessionDTO.getRentalId(), sessionDTO.getAmount(), successUrl, cancelUrl);
+            Session session = stripeService.createCheckoutSession(sessionDTO.getRentalId(), sessionDTO.getAmount(), successUrl, cancelUrl, sessionDTO.getTypePayment());
 
             // Devuelve la URL de la sesión
             return ResponseEntity.ok(Map.of(

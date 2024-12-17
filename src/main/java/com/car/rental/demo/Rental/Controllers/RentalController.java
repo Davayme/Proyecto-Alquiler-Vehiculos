@@ -2,8 +2,6 @@ package com.car.rental.demo.Rental.Controllers;
 
 
 import java.util.List;
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.car.rental.demo.Models.Payment;
 import com.car.rental.demo.Models.Rental;
+import com.car.rental.demo.Models.Payment.TypePayment;
 import com.car.rental.demo.Rental.Dtos.PaymentDTO;
 import com.car.rental.demo.Rental.Dtos.RentalDTO;
 import com.car.rental.demo.Rental.Services.PaymentService;
@@ -36,6 +35,7 @@ public class RentalController {
     private PaymentService rentalService;
     @Autowired
     private StripeService stripeService;
+    
     @PostMapping
     public ResponseEntity<?> createRental(@RequestBody RentalDTO rentalDTO) {
         try {
@@ -54,12 +54,16 @@ public class RentalController {
             String stripeId = session.getPaymentIntent();
             PaymentIntent paymentIntent = PaymentIntent.retrieve(stripeId);
             String paymentMethod = paymentIntent.getPaymentMethodTypes().get(0);
-
+            if (session.getMetadata().get("typePayment") == "RETURN") {
+                paymentDTO.setTypePayment(TypePayment.RETURN);
+            }else {
+                paymentDTO.setTypePayment(TypePayment.RENTAL);
+            }
             paymentDTO.setStripeId(stripeId);
             paymentDTO.setPaymentMethod(paymentMethod);
             paymentDTO.setAmount((Double)(session.getAmountTotal() / 100.0));
             paymentDTO.setRentalId(Long.parseLong(session.getMetadata().get("rentalId")));
-
+          
             Payment payment = rentalService.createPayment(paymentDTO);
             return ResponseEntity.status(HttpStatus.CREATED).body(payment);
         } catch (Exception ex) {
