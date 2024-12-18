@@ -2,6 +2,8 @@ package com.car.rental.demo.Vehicles.Controllers;
 
 import com.car.rental.demo.Cloudinary.CloudinaryService;
 import com.car.rental.demo.Exceptions.ResourceNotFoundException;
+import com.car.rental.demo.Models.Brand;
+import com.car.rental.demo.Models.Model;
 import com.car.rental.demo.Models.Vehicle;
 import com.car.rental.demo.Models.Vehicle.FuelType;
 import com.car.rental.demo.Models.Vehicle.TransmissionType;
@@ -107,7 +109,11 @@ public class VehicleController {
         List<VehicleGet> vehicles = vehicleService.getAllVehicles();
         return ResponseEntity.ok(vehicles);
     }
-
+    @GetMapping("/available")
+    public ResponseEntity<List<VehicleGet>> getAllAvailableVehicles() {
+        List<VehicleGet> vehicles = vehicleService.getAllAvailableVehicles();
+        return ResponseEntity.ok(vehicles);
+    }
     // Obtener un vehículo por ID
     @GetMapping("/{id}")
     public ResponseEntity<?> getVehicleById(@PathVariable("id") Long vehicleId) {
@@ -150,5 +156,18 @@ public class VehicleController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Error: " + e.getMessage());
         }
+    }
+
+    @GetMapping("/brands")
+    public ResponseEntity<List<Brand>> getAllBrands() {
+        List<Brand> brands = vehicleService.getAllBrands();
+        return ResponseEntity.ok(brands);
+    }
+
+    @GetMapping("/models/{id}")
+    public ResponseEntity<?> getBrandById(@PathVariable Long id) {
+        Brand brand = vehicleService.getBrandById(id);
+        List<Model> models = vehicleService.getModelsByBrand(brand);
+        return ResponseEntity.ok(models);
     }
 }

@@ -1,8 +1,16 @@
 package com.car.rental.demo.Models;
 
 import jakarta.persistence.*;
-import java.util.Date;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import java.util.Date;
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Entity
 @Table(name = "payments")
 public class Payment {
@@ -14,61 +22,16 @@ public class Payment {
     @ManyToOne
     @JoinColumn(name = "rentalId")
     private Rental rental;
-
-    private String paymentMethod; // Cash, Card, Transfer
+    private String stripePaymentId; // Guarda el ID del PaymentIntent de Stripe
+    private String paymentMethod;   // Guarda el método: card, cash, transfer, etc.
     private double amount;
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date paymentDate;
+    @Enumerated(EnumType.STRING)
+    private TypePayment typePayment;
 
-    private String paymentStatus; // Complete, Pending, Canceled
-
-    // Getters and setters
-    public Long getPaymentId() {
-        return paymentId;
-    }
-
-    public void setPaymentId(Long paymentId) {
-        this.paymentId = paymentId;
-    }
-
-    public Rental getRental() {
-        return rental;
-    }
-
-    public void setRental(Rental rental) {
-        this.rental = rental;
-    }
-
-    public String getPaymentMethod() {
-        return paymentMethod;
-    }
-
-    public void setPaymentMethod(String paymentMethod) {
-        this.paymentMethod = paymentMethod;
-    }
-
-    public double getAmount() {
-        return amount;
-    }
-
-    public void setAmount(double amount) {
-        this.amount = amount;
-    }
-
-    public Date getPaymentDate() {
-        return paymentDate;
-    }
-
-    public void setPaymentDate(Date paymentDate) {
-        this.paymentDate = paymentDate;
-    }
-
-    public String getPaymentStatus() {
-        return paymentStatus;
-    }
-
-    public void setPaymentStatus(String paymentStatus) {
-        this.paymentStatus = paymentStatus;
+    public enum TypePayment {
+        RENTAL, RETURN
     }
 }

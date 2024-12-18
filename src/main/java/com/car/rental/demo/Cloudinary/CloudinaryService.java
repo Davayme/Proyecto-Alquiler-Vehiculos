@@ -15,13 +15,17 @@ public class CloudinaryService {
     private final Cloudinary cloudinary;
 
     public CloudinaryService() {
-        Dotenv dotenv = Dotenv.load();
+       Dotenv dotenv = Dotenv.configure()
+		.directory("/etc/secrets") // Ruta del directorio
+		.filename(".env")          // Nombre del archivo
+		.load();
         cloudinary = new Cloudinary(ObjectUtils.asMap(
                 "cloud_name", dotenv.get("CLOUDINARY_CLOUD_NAME"),
                 "api_key", dotenv.get("CLOUDINARY_API_KEY"),
                 "api_secret", dotenv.get("CLOUDINARY_API_SECRET")));
     }
 
+    @SuppressWarnings("rawtypes")
     public String uploadImage(MultipartFile file) throws IOException {
         Map uploadResult = cloudinary.uploader().upload(file.getBytes(),
                 ObjectUtils.asMap(
