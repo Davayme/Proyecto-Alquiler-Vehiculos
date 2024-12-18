@@ -69,7 +69,13 @@ public class VehicleService {
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
-
+    public List<VehicleGet> getAllAvailableVehicles() {
+        return vehicleRepository.findAll().stream()
+                .filter(Vehicle::isActive)
+                .filter(vehicle -> vehicle.getStatus() == Vehicle.VehicleStatus.AVAILABLE)
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
     private VehicleGet convertToDTO(Vehicle vehicle) {
         VehicleGet dto = new VehicleGet();
         dto.setVehicleId(vehicle.getVehicleId());
