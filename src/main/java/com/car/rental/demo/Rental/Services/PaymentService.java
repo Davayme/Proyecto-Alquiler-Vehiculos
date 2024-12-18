@@ -1,9 +1,14 @@
 package com.car.rental.demo.Rental.Services;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -73,18 +78,43 @@ public class PaymentService {
         return rental;
     }
 
-    public Rental createRental(RentalDTO rentalDTO) {
+    public Rental createRental(RentalDTO rentalDTO) throws ParseException {
         Client client = clientService.findByIdNumber(rentalDTO.getClientId());
-        User employee = userService.findByUidFirebase(rentalDTO.getEmployeeId()).get();
+       // User employee = userService.findByUidFirebase(rentalDTO.getEmployeeId()).get();
         Vehicle vehicle = vehicleService.getVehicleById(rentalDTO.getVehicleId()).get();
-        
+       
+        Date returnDate = new Date();
+
+        // rentalDTO.setRentalDate(new Date("2021-10-10"));
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(rentalDTO.getRentalDate());
+        calendar.add(Calendar.HOUR, 5);
+        Date rentalDate = calendar.getTime();
+        switch (rentalDTO.getRentalDuration()) {
+            case DAILY:
+                //pls the number of days                
+                calendar.add(Calendar.DATE, rentalDTO.getQuantityOfDuration());
+                break;
+            case WEEKLY:
+                //plus the number of weeks
+                calendar.add(Calendar.DATE, rentalDTO.getQuantityOfDuration() * 7);
+                break;
+            case MONTHLY:
+                calendar.add(Calendar.MONTH, rentalDTO.getQuantityOfDuration());
+                break;
+            default:
+                break;
+        }
+        returnDate = calendar.getTime();
         Rental rental = Rental.builder()
                 .rentalDuration(rentalDTO.getRentalDuration().toString())
                 .quantityOfDuration(rentalDTO.getQuantityOfDuration())
+                .rentalDate(rentalDate)
+                .returnDate(returnDate)
                 .totalAmount(calculateTotalAmount(rentalDTO.getQuantityOfDuration(), vehicle, rentalDTO.getRentalDuration()))
                 .status(Rental.RentalStatus.RESERVED)
                 .client(client)
-                .employee(employee)
+                //.employee(employee)
                 .vehicle(vehicle)
                 .build();
         return rentalRepository.save(rental);

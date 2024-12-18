@@ -1,6 +1,18 @@
 package com.car.rental.demo.Models;
 
-import jakarta.persistence.*;
+import java.util.Date;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -26,11 +38,13 @@ public class Rental {
     @JoinColumn(name = "vehicleId")
     private Vehicle vehicle; // Relación con la tabla Vehiculos
 
-    @ManyToOne
-    @JoinColumn(name = "employeeId")
-    private User employee; // Relación con la tabla Users (empleado que gestionó el alquiler)
-
-
+    // @ManyToOne
+    // @JoinColumn(name = "employeeId")
+    // private User employee; // Relación con la tabla Users (empleado que gestionó el alquiler)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date rentalDate;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date returnDate;
     private String rentalDuration;
 
     private int quantityOfDuration;
