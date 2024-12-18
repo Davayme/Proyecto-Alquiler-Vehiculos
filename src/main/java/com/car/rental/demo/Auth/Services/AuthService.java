@@ -29,35 +29,33 @@ public class AuthService {
     private String firebaseApiKey;
 
     public LoginResponseDto login(LoginRequestDto loginRequestDto) throws FirebaseAuthException {
-        // Paso 1: Autenticar al usuario en Firebase usando correo y contraseña
-        String firebaseToken = authenticateWithFirebase(loginRequestDto.getEmail(), loginRequestDto.getPassword());
+        // Autenticar al usuario en Firebase usando correo y contraseña
+        Map<String, Object> firebaseTokens = authenticateWithFirebase(loginRequestDto.getEmail(), loginRequestDto.getPassword());
 
-        // Paso 2: Decodificar el token para obtener el UID del usuario
-        FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(firebaseToken);
-        System.out.println(decodedToken + "\n"+ decodedToken.getUid());
+        String idToken = (String) firebaseTokens.get("idToken");
+        String refreshToken = (String) firebaseTokens.get("refreshToken");
+
+        // Decodificar el token para obtener el UID del usuario
+        FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(idToken);
         String uid = decodedToken.getUid();
 
-        // Paso 3: Buscar al usuario en la base de datos para obtener su rol
+        // Buscar al usuario en la base de datos para obtener su rol
         User user = userRepository.findByUidFirebase(uid).orElse(null);
         if (user == null) {
             User userAux = User.builder()
-                .uidFirebase(uid)
-                .email(loginRequestDto.getEmail())
-                //.phone(createUserDto.getPhone()) 
-                .role(User.Role.CLIENT)
-                .active(true)
-                .build();
-                user = userRepository.save(userAux);
+                    .uidFirebase(uid)
+                    .email(loginRequestDto.getEmail())
+                    .role(User.Role.CLIENT)
+                    .active(true)
+                    .build();
+            user = userRepository.save(userAux);
         }
 
-        // Paso 4: Construir el nombre completo
-        //String fullName = user.getFirstName() + " " + user.getLastName();
-
-        // Paso 5: Devolver el token, el rol, el nombre completo y el correo en el DTO de respuesta
-        return new LoginResponseDto("Bearer " + firebaseToken, user.getRole().name(), user.getEmail());
+        // Devolver el token, el rol, el correo y el refreshToken en el DTO de respuesta
+        return new LoginResponseDto("Bearer " + idToken, user.getRole().name(), user.getEmail(), refreshToken);
     }
 
-    private String authenticateWithFirebase(String email, String password) {
+    private Map<String, Object> authenticateWithFirebase(String email, String password) {
         String url = "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=" + firebaseApiKey;
 
         // Crear el cuerpo de la solicitud
@@ -75,10 +73,10 @@ public class AuthService {
                 new ParameterizedTypeReference<Map<String, Object>>() {
                 });
 
-        // Extraer el token de la respuesta de Firebase
+        // Extraer los tokens de la respuesta de Firebase
         Map<String, Object> responseBody = response.getBody();
         if (responseBody != null) {
-            return (String) responseBody.get("idToken");
+            return responseBody;
         } else {
             throw new IllegalStateException("No se pudo obtener el token de Firebase");
         }

@@ -1,6 +1,7 @@
 package com.car.rental.demo.Vehicles.Services;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -114,33 +115,74 @@ public class VehicleService {
 
     private double calculateDailyRate(Vehicle vehicle) {
         LocalDate currentDate = LocalDate.now();
-        int currentDay = currentDate.getDayOfMonth();
-        int currentMonth = currentDate.getMonthValue();
 
-        for (Rate rate : vehicle.getType().getRates()) {
+        // Obtener las tarifas del tipo de vehículo
+        List<Rate> rates = vehicle.getType() != null && vehicle.getType().getRates() != null
+                ? vehicle.getType().getRates()
+                : Collections.emptyList();
+
+        if (rates.isEmpty()) {
+            // Si no hay tarifas, retornar 0.0
+            return 0.0;
+        }
+
+        // Ordenar las temporadas, priorizando las específicas y dejando "NORMAL" al
+        // final
+        rates = rates.stream()
+                .sorted((rate1, rate2) -> {
+                    if (rate1.getSeason().getName().equalsIgnoreCase("NORMAL"))
+                        return 1;
+                    if (rate2.getSeason().getName().equalsIgnoreCase("NORMAL"))
+                        return -1;
+                    return 0;
+                })
+                .collect(Collectors.toList());
+
+        // Evaluar cada temporada
+        for (Rate rate : rates) {
             Season season = rate.getSeason();
-            if (isDateInSeason(currentDay, currentMonth, season)) {
+            if (isDateInSeason(currentDate, season)) {
                 return rate.getCost();
             }
         }
-        return 0; // Default rate if no season matches
+
+        // Si ninguna temporada coincide, usar la tarifa asociada a "NORMAL"
+        return rates.stream()
+                .filter(rate -> rate.getSeason().getName().equalsIgnoreCase("NORMAL"))
+                .findFirst()
+                .map(Rate::getCost)
+                .orElse(0.0); // Tarifa por defecto si no hay tarifa para "NORMAL"
     }
 
-    private boolean isDateInSeason(int day, int month, Season season) {
+    private boolean isDateInSeason(LocalDate currentDate, Season season) {
+        // Manejar la temporada "NORMAL" como caso especial
+        if (season.getStartDay() == 0 && season.getStartMonth() == 0 &&
+                season.getEndDay() == 0 && season.getEndMonth() == 0) {
+            return false; // "NORMAL" no debe coincidir directamente
+        }
+
         int startDay = season.getStartDay();
         int startMonth = season.getStartMonth();
         int endDay = season.getEndDay();
         int endMonth = season.getEndMonth();
 
-        if (startMonth < endMonth || (startMonth == endMonth && startDay <= endDay)) {
-            // Season within the same year
-            return (month > startMonth || (month == startMonth && day >= startDay)) &&
-                   (month < endMonth || (month == endMonth && day <= endDay));
-        } else {
-            // Season spans the end of the year
-            return (month > startMonth || (month == startMonth && day >= startDay)) ||
-                   (month < endMonth || (month == endMonth && day <= endDay));
+        LocalDate startDate = LocalDate.of(
+                currentDate.getYear(), startMonth, startDay);
+        LocalDate endDate = LocalDate.of(
+                currentDate.getYear(), endMonth, endDay);
+
+        // Ajustar años si la temporada cruza el fin de año
+        if (endDate.isBefore(startDate) || endDate.isEqual(startDate)) {
+            endDate = endDate.plusYears(1);
         }
+
+        // Verificar si la fecha actual está dentro de la temporada
+        if ((currentDate.isEqual(startDate) || currentDate.isAfter(startDate)) &&
+                (currentDate.isEqual(endDate) || currentDate.isBefore(endDate))) {
+            return true;
+        }
+
+        return false;
     }
 
     // Obtener un vehículo por ID
@@ -167,7 +209,7 @@ public class VehicleService {
         vehicle.setNumberOfDoors(vehicleDTO.getNumberOfDoors());
         vehicle.setFuelType(vehicleDTO.getFuelType());
         vehicle.setTransmissionType(vehicleDTO.getTransmissionType());
-        
+
         return vehicleRepository.save(vehicle);
     }
 

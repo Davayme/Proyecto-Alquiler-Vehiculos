@@ -1,4 +1,4 @@
-package com.car.rental.demo.Vehicles;
+package com.car.rental.demo.Vehicles.Controllers;
 
 import com.car.rental.demo.Cloudinary.CloudinaryService;
 import com.car.rental.demo.Models.Vehicle;

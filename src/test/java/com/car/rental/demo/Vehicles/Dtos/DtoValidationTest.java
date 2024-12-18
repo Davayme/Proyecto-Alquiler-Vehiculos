@@ -1,9 +1,8 @@
-package com.car.rental.demo.Vehicles;
+package com.car.rental.demo.Vehicles.Dtos;
 
 import com.car.rental.demo.Models.Vehicle.VehicleStatus;
 import com.car.rental.demo.Models.Vehicle.FuelType;
 import com.car.rental.demo.Models.Vehicle.TransmissionType;
-import com.car.rental.demo.Vehicles.Dtos.VehicleDTO;
 
 
 import jakarta.validation.ConstraintViolation;

@@ -1,5 +1,9 @@
 package com.car.rental.demo.Models;
 
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -36,4 +40,8 @@ public class Season {
     @Builder.Default
     @Column(nullable = false, columnDefinition = "boolean default true")
     private boolean active = true; // Temporada activa o no
+
+    @OneToMany(mappedBy = "season", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<Rate> rates;
 }

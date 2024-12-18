@@ -1,6 +1,7 @@
 package com.car.rental.demo.Models;
 
 import java.util.List;
+import java.util.ArrayList;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -35,12 +36,14 @@ public class TypeVehicle {
     private String name; 
     private String description;
 
+    @Builder.Default
     @OneToMany(mappedBy = "type", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
-    private List<Vehicle> vehicles;
+    private List<Vehicle> vehicles = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "type", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Rate> rates;
+    private List<Rate> rates = new ArrayList<>();
 
     public void setRates(List<Rate> rates) {
         this.rates = rates;
