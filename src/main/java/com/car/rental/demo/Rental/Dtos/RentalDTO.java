@@ -1,5 +1,6 @@
 package com.car.rental.demo.Rental.Dtos;
-import java.util.Date;
+
+import com.car.rental.demo.Models.Rate.RentalDuration;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,7 +15,7 @@ public class RentalDTO {
     private String clientId;
     private Long vehicleId;
     private String employeeId;
-    private Date startDate;
-    private Date endDate;
+    private RentalDuration rentalDuration;
+    private int quantityOfDuration;
     private double totalAmount;
 }
