@@ -1,10 +1,13 @@
-package com.car.rental.demo.Vehicles;
+package com.car.rental.demo.Vehicles.Services;
 
 import com.car.rental.demo.Models.Rate;
 import com.car.rental.demo.Models.Season;
 import com.car.rental.demo.Models.TypeVehicle;
 import com.car.rental.demo.Models.Vehicle;
 import com.car.rental.demo.Models.VehicleImage;
+import com.car.rental.demo.Vehicles.TypeVehicleRepository;
+import com.car.rental.demo.Vehicles.VehicleImageRepository;
+import com.car.rental.demo.Vehicles.VehicleRepository;
 import com.car.rental.demo.Vehicles.Dtos.VehicleDTO;
 import com.car.rental.demo.Vehicles.Dtos.VehicleGet;
 import com.car.rental.demo.Vehicles.Services.VehicleService;

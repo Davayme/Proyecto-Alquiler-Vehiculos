@@ -1,4 +1,4 @@
-package com.car.rental.demo.Vehicles;
+package com.car.rental.demo.Vehicles.Services;
 
 import com.car.rental.demo.Models.Rate;
 import com.car.rental.demo.Models.Season;
@@ -9,6 +9,7 @@ import com.car.rental.demo.Models.Vehicle.TransmissionType;
 import com.car.rental.demo.Models.Vehicle.VehicleStatus;
 import com.car.rental.demo.Rates.RateRepository;
 import com.car.rental.demo.Rates.SeasonRepository;
+import com.car.rental.demo.Vehicles.TypeVehicleRepository;
 import com.car.rental.demo.Vehicles.VehicleRepository;
 import com.car.rental.demo.config.TestSecurityConfig;
 import com.jayway.jsonpath.JsonPath;
@@ -133,7 +134,7 @@ class VehicleControllerIntegrationTest {
                 Vehicle vehicle2 = Vehicle.builder()
                                 .brand("Honda")
                                 .model("Civic")
-                                .licensePlate("DEF-456")
+                                .licensePlate("ABC-123")
                                 .status(VehicleStatus.AVAILABLE)
                                 .acquisitionDate(new Date())
                                 .mileage(20000.0)
