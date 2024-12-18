@@ -6,7 +6,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -31,11 +30,10 @@ public class Rental {
     @JoinColumn(name = "employeeId")
     private User employee; // Relación con la tabla Users (empleado que gestionó el alquiler)
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date startDate;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date endDate;
+    private String rentalDuration;
+
+    private int quantityOfDuration;
 
     private double totalAmount;
     @Enumerated(EnumType.STRING)

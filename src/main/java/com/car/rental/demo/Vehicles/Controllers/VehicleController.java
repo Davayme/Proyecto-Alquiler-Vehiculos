@@ -109,7 +109,11 @@ public class VehicleController {
         List<VehicleGet> vehicles = vehicleService.getAllVehicles();
         return ResponseEntity.ok(vehicles);
     }
-
+    @GetMapping("/available")
+    public ResponseEntity<List<VehicleGet>> getAllAvailableVehicles() {
+        List<VehicleGet> vehicles = vehicleService.getAllAvailableVehicles();
+        return ResponseEntity.ok(vehicles);
+    }
     // Obtener un vehículo por ID
     @GetMapping("/{id}")
     public ResponseEntity<?> getVehicleById(@PathVariable("id") Long vehicleId) {

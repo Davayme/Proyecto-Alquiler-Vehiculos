@@ -4,7 +4,6 @@ import com.car.rental.demo.Models.Rental;
 import com.car.rental.demo.Models.Vehicle;
 import com.car.rental.demo.Models.Payment.TypePayment;
 import com.car.rental.demo.Rental.Services.PaymentService;
-import com.car.rental.demo.Vehicles.Services.VehicleService;
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
 // import com.stripe.model.PaymentIntent;
