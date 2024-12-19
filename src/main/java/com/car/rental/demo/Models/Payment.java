@@ -22,6 +22,11 @@ public class Payment {
     @ManyToOne
     @JoinColumn(name = "rentalId")
     private Rental rental;
+
+    @ManyToOne
+    @JoinColumn(name = "returnId")
+    private Return returnRecord; 
+    
     private String stripePaymentId; // Guarda el ID del PaymentIntent de Stripe
     private String paymentMethod;   // Guarda el método: card, cash, transfer, etc.
     private double amount;
