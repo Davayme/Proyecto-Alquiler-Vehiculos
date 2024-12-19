@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 public class RentalDTO {
     private String clientId;
     private Long vehicleId;
-  //  private String employeeId;
+    private String userId;
     private Date rentalDate;
     private RentalDuration rentalDuration;
     private int quantityOfDuration;

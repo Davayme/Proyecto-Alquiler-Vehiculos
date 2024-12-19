@@ -97,5 +97,16 @@ public class ClientController {
                     .body("Error: " + ex.getMessage());
         }
     }
+
+    @GetMapping("/user/{email}")
+    public ResponseEntity<?> getClientByUser(@PathVariable("email") String email) {
+        try {
+            List<Client> clients = clientService.findByUser(email);
+            return ResponseEntity.ok(clients);
+        } catch (ResourceNotFoundException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Error: " + ex.getMessage());
+        }
+    }
     
 }
