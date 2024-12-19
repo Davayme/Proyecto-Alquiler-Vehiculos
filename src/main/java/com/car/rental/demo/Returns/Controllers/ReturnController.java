@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.car.rental.demo.Models.Return;
 import com.car.rental.demo.Models.Payment;
 import com.car.rental.demo.Models.Payment.TypePayment;
-import com.car.rental.demo.Rental.Dtos.PaymentDTO;
-import com.car.rental.demo.Rental.Services.PaymentService;
 import com.car.rental.demo.Returns.Dtos.CreateReturnDTO;
 import com.car.rental.demo.Returns.Dtos.CreateReturnWithoutDamageDTO;
 import com.car.rental.demo.Returns.Dtos.PaymentDTOReturn;
