@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -30,14 +32,17 @@ public class Return {
 
     private double totalReturnAmount;
 
+    private double lateFee;
+
     @OneToMany(mappedBy = "returnRecord", cascade = CascadeType.ALL)
     @Builder.Default
+    @JsonManagedReference
     private List<ReturnDetail> details = new ArrayList<>();
 
     // Método para calcular el monto total de los daños
     public double calculateTotalDamageCost() {
         return details.stream()
-                .filter(detail -> "Dañado".equals(detail.getStatus()))
+                .filter(detail -> ReturnDetail.PartStatus.DAMAGED.equals(detail.getStatus()))
                 .mapToDouble(ReturnDetail::getDamageCost)
                 .sum();
     }
@@ -46,7 +51,6 @@ public class Return {
     @PrePersist
     @PreUpdate
     public void updateTotalReturnAmount() {
-        this.totalReturnAmount = calculateTotalDamageCost();
+        this.totalReturnAmount = calculateTotalDamageCost() + this.lateFee;
     }
-
 }

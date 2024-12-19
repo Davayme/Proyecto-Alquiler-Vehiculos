@@ -12,4 +12,5 @@ import lombok.NoArgsConstructor;
 public class CreateReturnWithoutDamageDTO {
     private Long rentalId;
     private Date returnDate;
+    private double lateFee;
 }

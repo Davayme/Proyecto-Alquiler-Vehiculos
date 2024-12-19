@@ -1,5 +1,6 @@
 package com.car.rental.demo.Returns.Dtos;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -13,6 +14,7 @@ import lombok.NoArgsConstructor;
 public class CreateReturnDTO {
     private Long rentalId;
     private Date returnDate;
-    private List<ReturnDetailDTO> returnDetails;
+    private double lateFee;
+    private List<ReturnDetailDTO> returnDetails = new ArrayList<>();
 }
 

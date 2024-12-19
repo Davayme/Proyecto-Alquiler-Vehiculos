@@ -1,12 +1,8 @@
 package com.car.rental.demo.Models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -26,11 +22,18 @@ public class ReturnDetail {
 
     @ManyToOne
     @JoinColumn(name = "returnId", nullable = false)
-    private Return returnRecord; 
+    @JsonBackReference
+    private Return returnRecord;
 
-    private String partName; // Nombre de la parte del vehículo (e.g., "Puerta", "Neumático")
+    private String partName; // Nombre de la parte del vehículo (e.g., "Door", "Tire")
 
-    private String status; // "Perfecto" o "Dañado"
+    @Enumerated(EnumType.STRING)
+    private PartStatus status; // "PERFECT" o "DAMAGED"
 
     private double damageCost;
+
+    public enum PartStatus {
+        PERFECT,
+        DAMAGED
+    }
 }
