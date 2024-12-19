@@ -13,6 +13,7 @@ import com.car.rental.demo.Models.Rate;
 import com.car.rental.demo.Models.Season;
 import com.car.rental.demo.Models.TypeVehicle;
 import com.car.rental.demo.Models.Vehicle;
+import com.car.rental.demo.Models.Vehicle.VehicleStatus;
 import com.car.rental.demo.Models.VehicleImage;
 import com.car.rental.demo.Vehicles.VehicleImageRepository;
 import com.car.rental.demo.Vehicles.VehicleModelRepository;
@@ -175,6 +176,12 @@ public class VehicleService {
     public void deleteVehicle(Long vehicleId) {
         Vehicle vehicle = vehicleRepository.findById(vehicleId)
                 .orElseThrow(() -> new RuntimeException("Vehículo no encontrado"));
+
+        // Verificar si el vehículo está en estado RENTED
+        if (vehicle.getStatus() == VehicleStatus.RENTED) {
+            throw new RuntimeException("No se puede eliminar un vehículo que está en estado de renta");
+        }
+
         vehicle.setActive(false);
         vehicleRepository.save(vehicle);
     }
