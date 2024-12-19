@@ -50,7 +50,7 @@ public class GlobalExceptionHandler {
     public Map<String, String> handleGeneralException(Exception ex) {
         Map<String, String> error = new HashMap<>();
         error.put("error", "Internal Server Error");
-        error.put("message", "An unexpected error occurred.");
+        error.put("message", ex.getMessage());
         return error;
     }
 }
