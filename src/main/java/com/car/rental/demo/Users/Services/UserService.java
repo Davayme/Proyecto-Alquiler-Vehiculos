@@ -107,5 +107,10 @@ public class UserService {
         user.setActive(false);
         return userRepository.save(user);
     }
+
+    public User getUserByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado con email: " + email));
+    }
     
 }

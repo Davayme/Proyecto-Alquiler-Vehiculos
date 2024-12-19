@@ -28,4 +28,5 @@ public class ClientDto {
     private String email;
     @ValidPhoneNumber
     private String phone;
+    private String user;
 }

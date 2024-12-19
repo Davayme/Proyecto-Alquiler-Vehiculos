@@ -114,14 +114,16 @@ public class PaymentService {
                 .totalAmount(calculateTotalAmount(rentalDTO.getQuantityOfDuration(), vehicle, rentalDTO.getRentalDuration()))
                 .status(Rental.RentalStatus.RESERVED)
                 .client(client)
-                //.employee(employee)
                 .vehicle(vehicle)
                 .build();
         return rentalRepository.save(rental);
     }
 
-    public List<Rental> getRentals() {
-        return rentalRepository.findAll();
+    public List<Rental> getRentals(String email) {
+        
+        List<Client> clients = clientService.findByUser(email);
+        List<Rental> rentals = rentalRepository.findByClientIn(clients);
+        return rentals;
     }
 
     private double calculateTotalAmount(int quantity, Vehicle vehicle, RentalDuration rentalDuration) {
