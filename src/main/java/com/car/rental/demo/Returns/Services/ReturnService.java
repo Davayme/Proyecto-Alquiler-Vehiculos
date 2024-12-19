@@ -14,6 +14,7 @@ import com.car.rental.demo.Models.Vehicle;
 import com.car.rental.demo.Rental.RentalRepository;
 import com.car.rental.demo.Returns.ReturnRepository;
 import com.car.rental.demo.Returns.Dtos.CreateReturnDTO;
+import com.car.rental.demo.Returns.Dtos.CreateReturnWithoutDamageDTO;
 import com.car.rental.demo.Returns.Dtos.RentalDtoReturns;
 
 import com.car.rental.demo.Vehicles.VehicleRepository;
@@ -42,11 +43,11 @@ public class ReturnService {
     }
 
 
-        public Return createReturnWithoutDamage(Long rentalId, Date returnDate) {
-        Rental rental = rentalRepository.findById(rentalId).orElseThrow(() -> new RuntimeException("Rental not found"));
+    public Return createReturnWithoutDamage(CreateReturnWithoutDamageDTO createReturnWithoutDamageDTO) {
+        Rental rental = rentalRepository.findById(createReturnWithoutDamageDTO.getRentalId()).orElseThrow(() -> new RuntimeException("Rental not found"));
         Return returnRecord = Return.builder()
                 .rental(rental)
-                .returnDate(returnDate)
+                .returnDate(createReturnWithoutDamageDTO.getReturnDate())
                 .totalReturnAmount(0)
                 .build();
         returnRepository.save(returnRecord);
@@ -84,7 +85,7 @@ public class ReturnService {
         });
 
         // Cambiar el estado del vehículo a AVAILABLE
-        rental.getVehicle().setStatus(Vehicle.VehicleStatus.AVAILABLE);
+        rental.getVehicle().setStatus(Vehicle.VehicleStatus.IN_MAINTENANCE);
         vehicleRepository.save(rental.getVehicle());
 
         return returnRecord;

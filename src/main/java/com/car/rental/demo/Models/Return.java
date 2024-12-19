@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -30,7 +31,8 @@ public class Return {
     private double totalReturnAmount;
 
     @OneToMany(mappedBy = "returnRecord", cascade = CascadeType.ALL)
-    private List<ReturnDetail> details;
+    @Builder.Default
+    private List<ReturnDetail> details = new ArrayList<>();
 
     // Método para calcular el monto total de los daños
     public double calculateTotalDamageCost() {
