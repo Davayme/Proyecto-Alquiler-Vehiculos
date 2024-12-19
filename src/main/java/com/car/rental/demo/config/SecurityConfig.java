@@ -34,11 +34,10 @@ public class SecurityConfig {
                 .requestMatchers("/vehicles/**").hasRole("ADMIN") // Permitir otros métodos solo a ADMIN
                 .requestMatchers("/users/**").hasRole("ADMIN")
                 .requestMatchers("/type-vehicles/**").hasRole("ADMIN")
-                .requestMatchers("/rates").hasRole("ADMIN")
+                .requestMatchers("/rates").hasAnyRole("ADMIN", "CLIENT", "EMPLOYEE")
                 .requestMatchers("/clients/**").hasRole("ADMIN")
-                .requestMatchers("/rentals/**").hasAnyRole("ADMIN", "CLIENT")
-                .requestMatchers("/stripe/**").hasAnyRole("ADMIN", "CLIENT")
-                .requestMatchers("/returns/**").hasAnyRole("ADMIN", "EMPLOYEE") 
+                .requestMatchers("/rentals/**").hasAnyRole("ADMIN", "CLIENT", "EMPLOYEE")
+                .requestMatchers("/stripe/**").hasAnyRole("ADMIN", "CLIENT", "EMPLOYEE")
                 .anyRequest().authenticated() // Requiere autenticación para cualquier otra solicitud
             )
             .addFilterBefore(firebaseAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);

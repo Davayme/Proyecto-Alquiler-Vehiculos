@@ -1,5 +1,10 @@
 package com.car.rental.demo.Models;
 
+
+import org.hibernate.annotations.ManyToAny;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -39,6 +44,7 @@ public class Client {
     
     @ManyToOne
     @JoinColumn(name = "userId")
+    @JsonIgnore
     private User user;
     
     @Column(length = 50)
