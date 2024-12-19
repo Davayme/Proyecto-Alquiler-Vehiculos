@@ -31,4 +31,6 @@ public class ReturnDetail {
     private String partName; // Nombre de la parte del vehículo (e.g., "Puerta", "Neumático")
 
     private String status; // "Perfecto" o "Dañado"
+
+    private double damageCost;
 }
