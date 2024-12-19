@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -19,15 +20,18 @@ public class Return {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long returnId;
 
-    @ManyToOne
-    @JoinColumn(name = "rentalId")
+    @OneToOne
+    @JoinColumn(name = "rentalId", nullable = false)
     private Rental rental;
 
-    @Temporal(TemporalType.TIMESTAMP)
     private Date returnDate;
 
-    private String vehicleCondition;
-    private double extraCharges;
+    private double additionalCharges;
+
+    private double totalReturnAmount; // totalAmount + additionalCharges
+
+    @OneToMany(mappedBy = "returnRecord", cascade = CascadeType.ALL)
+    private List<ReturnDetail> details;
 
 
 }

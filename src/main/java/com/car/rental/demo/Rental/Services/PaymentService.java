@@ -25,7 +25,6 @@ import com.car.rental.demo.Models.User;
 import com.car.rental.demo.Models.Vehicle;
 import com.car.rental.demo.Rental.PaymentRepository;
 import com.car.rental.demo.Rental.RentalRepository;
-import com.car.rental.demo.Rental.ReturnRepository;
 import com.car.rental.demo.Rental.Dtos.PaymentDTO;
 import com.car.rental.demo.Rental.Dtos.RentalDTO;
 import com.car.rental.demo.Users.Services.UserService;
@@ -38,7 +37,7 @@ public class PaymentService {
     @Autowired
     private RentalRepository rentalRepository;
     @Autowired
-    private ReturnRepository returnRepository;
+    private com.car.rental.demo.Returns.ReturnRepository returnRepository;
     @Autowired
     private ClientService clientService;
     @Autowired
