@@ -1,7 +1,9 @@
 package com.car.rental.demo.Vehicles.Services;
 
 import com.car.rental.demo.Models.TypeVehicle;
+import com.car.rental.demo.Models.Vehicle;
 import com.car.rental.demo.Vehicles.TypeVehicleRepository;
+import com.car.rental.demo.Vehicles.VehicleRepository;
 import com.car.rental.demo.Vehicles.Dtos.CreateTypeVehicleDto;
 import com.car.rental.demo.Vehicles.Dtos.TypeVehicleDTO;
 import com.car.rental.demo.Vehicles.Dtos.UpdateTypeVehicleDto;
@@ -17,7 +19,8 @@ import java.util.stream.Collectors;
 public class TypeVehicleService {
 
     private final TypeVehicleRepository typeVehicleRepository;
-
+    private final VehicleRepository vehicleRepository;
+    
     // Crear un nuevo tipo de vehículo
     public TypeVehicle createTypeVehicle(CreateTypeVehicleDto createDto) {
         if (typeVehicleRepository.existsByName(createDto.getName())) {
@@ -33,11 +36,12 @@ public class TypeVehicleService {
     }
 
     // Obtener todos los tipos de vehículos
-     public List<TypeVehicleDTO> getAllTypeVehicles() {
+    public List<TypeVehicleDTO> getAllTypeVehicles() {
         return typeVehicleRepository.findAll().stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
+
     private TypeVehicleDTO convertToDTO(TypeVehicle typeVehicle) {
         return TypeVehicleDTO.builder()
                 .typeId(typeVehicle.getTypeId())
@@ -49,7 +53,8 @@ public class TypeVehicleService {
     // Editar un tipo de vehículo existente
     public TypeVehicle updateTypeVehicle(UpdateTypeVehicleDto updateDto) {
         TypeVehicle typeVehicle = typeVehicleRepository.findById(updateDto.getTypeId())
-                .orElseThrow(() -> new IllegalArgumentException("No se encontró un tipo de vehículo con ID: " + updateDto.getTypeId()));
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "No se encontró un tipo de vehículo con ID: " + updateDto.getTypeId()));
 
         typeVehicle.setName(updateDto.getName());
         typeVehicle.setDescription(updateDto.getDescription());
@@ -62,6 +67,16 @@ public class TypeVehicleService {
         if (!typeVehicleRepository.existsById(typeId)) {
             throw new IllegalArgumentException("No se encontró un tipo de vehículo con ID: " + typeId);
         }
+
+        // Verificar si hay vehículos asociados a este tipo de vehículo
+        List<Vehicle> vehicles = vehicleRepository.findByTypeTypeId(typeId);
+        boolean hasRentedVehicles = vehicles.stream()
+                .anyMatch(vehicle -> vehicle.getStatus() == Vehicle.VehicleStatus.RENTED);
+
+        if (hasRentedVehicles) {
+            throw new RuntimeException("No se puede eliminar un tipo de vehículo que tiene vehículos en renta");
+        }
+
         typeVehicleRepository.deleteById(typeId);
     }
 }
