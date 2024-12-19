@@ -10,12 +10,14 @@ import org.springframework.stereotype.Service;
 
 import com.car.rental.demo.Models.Payment;
 import com.car.rental.demo.Models.Rental;
+import com.car.rental.demo.Models.Rental.RentalStatus;
 import com.car.rental.demo.Models.Return;
 import com.car.rental.demo.Models.ReturnDetail;
 import com.car.rental.demo.Models.ReturnDetail.PartStatus;
 import com.car.rental.demo.Models.Vehicle;
 import com.car.rental.demo.Rental.PaymentRepository;
 import com.car.rental.demo.Rental.RentalRepository;
+import com.car.rental.demo.Rental.Services.PaymentService;
 import com.car.rental.demo.Returns.ReturnRepository;
 import com.car.rental.demo.Returns.Dtos.CreateReturnDTO;
 import com.car.rental.demo.Returns.Dtos.CreateReturnWithoutDamageDTO;
@@ -36,6 +38,8 @@ public class ReturnService {
     @Autowired 
     private VehicleRepository vehicleRepository;
 
+    @Autowired
+    private PaymentService paymentService;
     
     @Autowired
     private PaymentRepository paymentRepository;
@@ -43,6 +47,7 @@ public class ReturnService {
     public List<RentalDtoReturns> getAllRentals() {
         List<Rental> rentals = rentalRepository.findAll();
         return rentals.stream()
+                .filter(rental -> rental.getStatus() == RentalStatus.IN_PROGRESS)
                 .map(rental -> new RentalDtoReturns(
                         rental.getRentalId(),
                         rental.getClient().getIdNumber(),
@@ -65,7 +70,7 @@ public class ReturnService {
         // Cambiar el estado del vehículo a AVAILABLE
         rental.getVehicle().setStatus(Vehicle.VehicleStatus.AVAILABLE);
         vehicleRepository.save(rental.getVehicle());
-
+        paymentService.updateStatusRental(rental.getRentalId(), "COMPLETED");
         return returnRecord;
     }
 
@@ -101,7 +106,7 @@ public class ReturnService {
             rental.getVehicle().setStatus(Vehicle.VehicleStatus.AVAILABLE);
         }
         vehicleRepository.save(rental.getVehicle());
-
+        paymentService.updateStatusRental(rental.getRentalId(), "COMPLETED");
         return returnRecord;
     }
 
