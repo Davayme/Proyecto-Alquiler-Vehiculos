@@ -59,7 +59,7 @@ public class Rental {
 
     public enum RentalStatus {
         RESERVED,
-        APROVED, 
+        APPROVED, 
         IN_PROGRESS, 
         COMPLETED,
         CANCELLED
