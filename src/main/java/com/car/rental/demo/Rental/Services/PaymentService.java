@@ -53,7 +53,7 @@ public class PaymentService {
 
     public Payment createPayment(PaymentDTO paymentDTO) {
         Rental rental = getRental(paymentDTO.getRentalId());
-
+        
         Payment payment = Payment.builder()
                 .amount(paymentDTO.getAmount())
                 .paymentDate(new Date())
@@ -62,7 +62,8 @@ public class PaymentService {
                 .paymentMethod(paymentDTO.getPaymentMethod())
                 .typePayment(paymentDTO.getTypePayment())
                 .build();
-
+        rental.setStatus(RentalStatus.IN_PROGRESS);
+        rentalRepository.save(rental);
         return paymentRepository.save(payment);
     }
 
