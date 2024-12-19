@@ -7,7 +7,8 @@ import org.springframework.stereotype.Service;
 import com.car.rental.demo.Clients.ClientRepository;
 import com.car.rental.demo.Clients.Dtos.ClientDto;
 import com.car.rental.demo.Models.Client;
-
+import com.car.rental.demo.Models.User;
+import com.car.rental.demo.Users.Services.UserService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -15,10 +16,15 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ClientService {
     private final ClientRepository clientRepository;
-
+    private final UserService userService;
 
     public Client findByIdNumber(String idNumber) {
         return clientRepository.findByIdNumber(idNumber).orElseThrow(() -> new IllegalArgumentException("Cliente no encontrado"));
+    }
+
+    public List<Client> findByUser(String email) {
+        User user = userService.getUserByEmail(email);
+        return clientRepository.findByUser(user);
     }
 
     public List<Client> getAll() {
@@ -26,6 +32,7 @@ public class ClientService {
     }
 
     public Client createClient(ClientDto clientDto) {
+        User user = userService.getUserByEmail(clientDto.getUser());
         Client client = Client.builder()
                 .idNumber(clientDto.getIdNumber())
                 .firstName(clientDto.getFirstName())
@@ -34,6 +41,7 @@ public class ClientService {
                 .secondLastName(clientDto.getSecondLastName())
                 .email(clientDto.getEmail())
                 .phone(clientDto.getPhone())
+                .user(user)
                 .build();
         return clientRepository.save(client);
     }

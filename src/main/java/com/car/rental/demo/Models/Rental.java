@@ -39,8 +39,8 @@ public class Rental {
     private Vehicle vehicle; // Relación con la tabla Vehiculos
 
     // @ManyToOne
-    // @JoinColumn(name = "employeeId")
-    // private User employee; // Relación con la tabla Users (empleado que gestionó el alquiler)
+    // @JoinColumn(name = "userId")
+    // private User user; // Relación con la tabla Users (empleado que gestionó el alquiler)
     @Temporal(TemporalType.TIMESTAMP)
     private Date rentalDate;
     @Temporal(TemporalType.TIMESTAMP)
@@ -58,7 +58,8 @@ public class Rental {
 
 
     public enum RentalStatus {
-        RESERVED, 
+        RESERVED,
+        APROVED, 
         IN_PROGRESS, 
         COMPLETED,
         CANCELLED
