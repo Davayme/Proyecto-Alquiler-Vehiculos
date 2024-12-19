@@ -5,7 +5,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.car.rental.demo.Models.Brand;
 import com.car.rental.demo.Models.Model;
@@ -18,16 +20,19 @@ import com.car.rental.demo.Models.VehicleImage;
 import com.car.rental.demo.Vehicles.VehicleImageRepository;
 import com.car.rental.demo.Vehicles.VehicleModelRepository;
 import com.car.rental.demo.Vehicles.VehicleRepository;
+import com.car.rental.demo.Vehicles.Controllers.VehicleWebSocketController;
 import com.car.rental.demo.Vehicles.TypeVehicleRepository;
 import com.car.rental.demo.Vehicles.VehicleBrandRepository;
 import com.car.rental.demo.Vehicles.Dtos.VehicleDTO;
 import com.car.rental.demo.Vehicles.Dtos.VehicleGet;
 import com.car.rental.demo.Vehicles.Dtos.VehicleImageGetDto;
 
+
+
 @Service
+@Transactional
 public class VehicleService {
-    @Autowired
-    private VehicleRepository vehicleRepository;
+
     @Autowired
     private VehicleImageRepository vehicleImageRepository;
     @Autowired
@@ -36,6 +41,20 @@ public class VehicleService {
     private VehicleBrandRepository brandRepository;
     @Autowired
     private VehicleModelRepository modelRepository;
+
+    @Autowired
+    public void setVehicleRepository(VehicleRepository vehicleRepository) {
+        this.vehicleRepository = vehicleRepository;
+    }
+
+    @Autowired
+    @Lazy
+    public void setVehicleWebSocketController(VehicleWebSocketController vehicleWebSocketController) {
+        this.vehicleWebSocketController = vehicleWebSocketController;
+    }
+
+    private VehicleRepository vehicleRepository;
+    private VehicleWebSocketController vehicleWebSocketController;
 
     // Crear un vehículo
     public Vehicle createVehicle(VehicleDTO vehicleDTO) {
@@ -168,7 +187,8 @@ public class VehicleService {
         vehicle.setNumberOfDoors(vehicleDTO.getNumberOfDoors());
         vehicle.setFuelType(vehicleDTO.getFuelType());
         vehicle.setTransmissionType(vehicleDTO.getTransmissionType());
-        
+
+        vehicleWebSocketController.notifyVehicleStatusChange();
         return vehicleRepository.save(vehicle);
     }
 
