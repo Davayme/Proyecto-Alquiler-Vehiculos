@@ -13,11 +13,16 @@ public class WebConfig {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**")
+                /*registry.addMapping("/**")
                         .allowedOrigins("*")  // Permitir el origen del cliente
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")  // Métodos permitidos
                         .allowedHeaders("*")  // Permitir todos los encabezados
-                        .allowCredentials(true);  // Permitir credenciales (Authorization, cookies)
+                        .allowCredentials(true);  // Permitir credenciales (Authorization, cookies)*/
+                registry.addMapping("/**")
+        .allowedOriginPatterns("*")  // Permite todos los orígenes con patrones
+        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+        .allowedHeaders("*")
+        .allowCredentials(true);
             }
         };
     }
