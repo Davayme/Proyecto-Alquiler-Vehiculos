@@ -8,18 +8,16 @@ import org.springframework.web.multipart.MultipartFile;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 
-import io.github.cdimascio.dotenv.Dotenv;
 
 @Service
 public class CloudinaryService {
     private final Cloudinary cloudinary;
 
     public CloudinaryService() {
-        Dotenv dotenv = Dotenv.load();
         cloudinary = new Cloudinary(ObjectUtils.asMap(
-                "cloud_name", dotenv.get("CLOUDINARY_CLOUD_NAME"),
-                "api_key", dotenv.get("CLOUDINARY_API_KEY"),
-                "api_secret", dotenv.get("CLOUDINARY_API_SECRET")));
+                "cloud_name", "dyawf0vyu",
+                "api_key", "616421482787377",
+                "api_secret", "-KrOSBUStjj0Aav1y4Nalhg3rGo"));
     }
 
     @SuppressWarnings("rawtypes")
