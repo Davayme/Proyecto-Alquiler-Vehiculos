@@ -214,4 +214,18 @@ public class VehicleService {
     public List<Model> getModelsByBrand(Brand brandId) {
         return modelRepository.findByBrandId(brandId);
     }
+
+    public List<VehicleGet> getVehiclesInMaintenance() {
+        return vehicleRepository.findByStatus(VehicleStatus.IN_MAINTENANCE).stream()
+        .filter(Vehicle::isActive)
+        .map(this::convertToDTO)
+        .collect(Collectors.toList());
+    }
+
+    public Vehicle updateVehicleToAvailabe(Long vehicleId) {
+        Vehicle vehicle = vehicleRepository.findById(vehicleId)
+                .orElseThrow(() -> new RuntimeException("Vehículo no encontrado"));
+        vehicle.setStatus(VehicleStatus.AVAILABLE);
+        return vehicleRepository.save(vehicle);
+    }
 }
