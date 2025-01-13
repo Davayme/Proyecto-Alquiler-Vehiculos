@@ -11,12 +11,18 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
+                script {
+                    echo 'Clonando el repositorio desde GitHub...'
+                }
                 // Clonar el repositorio desde GitHub
                 git url: 'https://github.com/3ct-mx/spring-boot-computadoras.git', branch: 'main'
             }
         }
         stage('Build') {
             steps {
+                script {
+                    echo 'Compilando el proyecto usando Maven...'
+                }
                 // Compilar el proyecto usando Maven
                 sh 'mvn clean install'
             }
@@ -24,10 +30,14 @@ pipeline {
     }
     post {
         success {
-            echo 'Build completed successfully!'
+            script {
+                echo '¡Build completado con éxito!'
+            }
         }
         failure {
-            echo 'Build failed.'
+            script {
+                echo 'El build falló.'
+            }
         }
     }
 }
