@@ -30,10 +30,10 @@ public class SecurityConfig {
                 .requestMatchers("/auth/login").permitAll()
                 .requestMatchers(HttpMethod.POST, "/users").permitAll()
                 .requestMatchers(HttpMethod.GET, "/vehicles/**").hasAnyRole("ADMIN", "CLIENT") // Permitir GET a CLIENT y ADMIN
-                .requestMatchers(HttpMethod.GET, "/type-vehicles/**").hasAnyRole("ADMIN", "CLIENT") // Permitir GET a CLIENT y ADMIN
-                .requestMatchers("/vehicles/**").hasRole("ADMIN") // Permitir otros métodos solo a ADMIN
+                .requestMatchers(HttpMethod.GET, "/type-vehicles/**").hasAnyRole("ADMIN", "CLIENT", "EMPLOYEE") // Permitir GET a CLIENT y ADMIN
+                .requestMatchers("/vehicles/**").hasAnyRole("ADMIN", "CLIENT", "EMPLOYEE") // Permitir otros métodos solo a ADMIN
                 .requestMatchers("/users/**").hasAnyRole("ADMIN", "CLIENT", "EMPLOYEE") // Permitir otros métodos solo a ADMIN y CLIENT
-                .requestMatchers("/type-vehicles/**").hasRole("ADMIN")
+                .requestMatchers("/type-vehicles/**").hasAnyRole("ADMIN", "CLIENT", "EMPLOYEE") // Permitir otros métodos solo a ADMIN y CLIENT
                 .requestMatchers("/rates").hasAnyRole("ADMIN", "CLIENT", "EMPLOYEE")
                 .requestMatchers("/clients/**").hasAnyRole("ADMIN", "CLIENT", "EMPLOYEE")
                 .requestMatchers("/rentals/**").hasAnyRole("ADMIN", "CLIENT", "EMPLOYEE")
