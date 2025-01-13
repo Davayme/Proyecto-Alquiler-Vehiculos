@@ -1,7 +1,12 @@
 pipeline {
-    agent { label 'docker-node' } // Usa el nodo etiquetado
     environment {
         JAVA_TOOL_OPTIONS = "-Duser.home=/home/jenkins"
+    }
+    agent {
+        docker {
+            image 'maven:3.8.1-jdk-11'
+            args '-v /tmp/maven:/home/jenkins/.m2 -e MAVEN_CONFIG=/home/jenkins/.m2'
+        }
     }
     stages {
         stage('Checkout') {
@@ -13,7 +18,7 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Construyendo el proyecto...'
-                sh 'docker run --rm -v "$PWD":/app -w /app maven:3.8.1-jdk-11 mvn clean install'
+                sh 'mvn clean install'
             }
         }
     }
