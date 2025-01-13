@@ -2,22 +2,29 @@ pipeline {
     environment {
         JAVA_TOOL_OPTIONS = "-Duser.home=/home/jenkins"
     }
-    agent {
-        docker {
-            image 'maven:3.8.1-jdk-11'
-            args '-v /tmp/maven:/home/jenkins/.m2 -e MAVEN_CONFIG=/home/jenkins/.m2'
-        }
-    }
+    agent any // Cambiado a `any` para construir la imagen en el nodo
     stages {
-        stage('Checkout') {
+        stage('Build Docker Image') {
             steps {
-                echo 'Clonando repositorio...'
-                git url: 'https://github.com/Davayme/Proyecto-Alquiler-Vehiculos.git', branch: 'main'
+                script {
+                    echo 'Construyendo la imagen Docker personalizada...'
+                }
+                // Construir la imagen Docker a partir del Dockerfile
+                sh 'docker build -t custom-maven-image .'
             }
         }
-        stage('Build') {
+        stage('Build with Maven') {
+            agent {
+                docker {
+                    image 'custom-maven-image' // Usar la imagen construida
+                    args '-v /tmp/maven:/home/jenkins/.m2 -e MAVEN_CONFIG=/home/jenkins/.m2'
+                }
+            }
             steps {
-                echo 'Construyendo el proyecto...'
+                script {
+                    echo 'Construyendo el proyecto usando Maven...'
+                }
+                // Compilar el proyecto
                 sh 'mvn clean install'
             }
         }
