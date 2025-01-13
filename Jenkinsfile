@@ -10,7 +10,7 @@ pipeline {
                     echo 'Construyendo la imagen Docker personalizada...'
                 }
                 // Construir la imagen Docker a partir del Dockerfile
-                sh 'docker build -t custom-maven-image .'
+                sh 'docker build -t maven:3.8.5-openjdk-17'
             }
         }
         stage('Build with Maven') {
