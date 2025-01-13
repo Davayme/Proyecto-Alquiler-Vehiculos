@@ -1,8 +1,21 @@
 package com.car.rental.demo.Models;
 
 import jakarta.persistence.*;
-import java.util.Date;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Entity
 @Table(name = "returns")
 public class Return {
@@ -11,53 +24,33 @@ public class Return {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long returnId;
 
-    @ManyToOne
-    @JoinColumn(name = "rentalId")
+    @OneToOne
+    @JoinColumn(name = "rentalId", nullable = false)
     private Rental rental;
 
-    @Temporal(TemporalType.TIMESTAMP)
     private Date returnDate;
 
-    private String vehicleCondition;
-    private double extraCharges;
+    private double totalReturnAmount;
 
-    public Long getReturnId() {
-        return returnId;
+    private double lateFee;
+
+    @OneToMany(mappedBy = "returnRecord", cascade = CascadeType.ALL)
+    @Builder.Default
+    @JsonManagedReference
+    private List<ReturnDetail> details = new ArrayList<>();
+
+    // Método para calcular el monto total de los daños
+    public double calculateTotalDamageCost() {
+        return details.stream()
+                .filter(detail -> ReturnDetail.PartStatus.DAMAGED.equals(detail.getStatus()))
+                .mapToDouble(ReturnDetail::getDamageCost)
+                .sum();
     }
 
-    public void setReturnId(Long returnId) {
-        this.returnId = returnId;
-    }
-
-    public Rental getRental() {
-        return rental;
-    }
-
-    public void setRental(Rental rental) {
-        this.rental = rental;
-    }
-
-    public Date getReturnDate() {
-        return returnDate;
-    }
-
-    public void setReturnDate(Date returnDate) {
-        this.returnDate = returnDate;
-    }
-
-    public String getVehicleCondition() {
-        return vehicleCondition;
-    }
-
-    public void setVehicleCondition(String vehicleCondition) {
-        this.vehicleCondition = vehicleCondition;
-    }
-
-    public double getExtraCharges() {
-        return extraCharges;
-    }
-
-    public void setExtraCharges(double extraCharges) {
-        this.extraCharges = extraCharges;
+    // Método para actualizar el monto total de los daños
+    @PrePersist
+    @PreUpdate
+    public void updateTotalReturnAmount() {
+        this.totalReturnAmount = calculateTotalDamageCost() + this.lateFee;
     }
 }

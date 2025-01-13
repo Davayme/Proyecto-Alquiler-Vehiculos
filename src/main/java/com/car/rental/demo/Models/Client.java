@@ -1,11 +1,14 @@
 package com.car.rental.demo.Models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
@@ -27,7 +30,7 @@ public class Client {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, length = 10)
     private String idNumber;
 
     @Column(nullable = false, length = 50)
@@ -35,7 +38,12 @@ public class Client {
 
     @Column(nullable = false, length = 50)
     private String lastName;
-
+    
+    @ManyToOne
+    @JoinColumn(name = "userId")
+    @JsonIgnore
+    private User user;
+    
     @Column(length = 50)
     private String secondName;
 

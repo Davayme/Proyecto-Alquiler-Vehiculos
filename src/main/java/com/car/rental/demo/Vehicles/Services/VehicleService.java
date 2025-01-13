@@ -13,6 +13,7 @@ import com.car.rental.demo.Models.Rate;
 import com.car.rental.demo.Models.Season;
 import com.car.rental.demo.Models.TypeVehicle;
 import com.car.rental.demo.Models.Vehicle;
+import com.car.rental.demo.Models.Vehicle.VehicleStatus;
 import com.car.rental.demo.Models.VehicleImage;
 import com.car.rental.demo.Vehicles.VehicleImageRepository;
 import com.car.rental.demo.Vehicles.VehicleModelRepository;
@@ -41,19 +42,24 @@ public class VehicleService {
         TypeVehicle type = typeRepository.findById(vehicleDTO.getTypeId())
                 .orElseThrow(() -> new RuntimeException("Tipo de vehículo no encontrado"));
 
-        Vehicle vehicle = new Vehicle();
-        vehicle.setBrand(vehicleDTO.getBrand());
-        vehicle.setModel(vehicleDTO.getModel());
-        vehicle.setLicensePlate(vehicleDTO.getLicensePlate());
-        vehicle.setStatus(vehicleDTO.getStatus());
-        vehicle.setAcquisitionDate(vehicleDTO.getAcquisitionDate());
-        vehicle.setMileage(vehicleDTO.getMileage());
-        vehicle.setLocation(vehicleDTO.getLocation());
-        vehicle.setType(type);
-        vehicle.setAirConditioning(vehicleDTO.getAirConditioning());
-        vehicle.setNumberOfDoors(vehicleDTO.getNumberOfDoors());
-        vehicle.setFuelType(vehicleDTO.getFuelType());
-        vehicle.setTransmissionType(vehicleDTO.getTransmissionType());
+        Vehicle vehicle = Vehicle.builder()
+        .brand(vehicleDTO.getBrand())
+        .model(vehicleDTO.getModel())
+        .licensePlate(vehicleDTO.getLicensePlate())
+        .status(vehicleDTO.getStatus())
+        .acquisitionDate(vehicleDTO.getAcquisitionDate())
+        .mileage(vehicleDTO.getMileage())
+        .location(vehicleDTO.getLocation())
+        .type(type)
+        .airConditioning(vehicleDTO.getAirConditioning())
+        .numberOfDoors(vehicleDTO.getNumberOfDoors())
+        .fuelType(vehicleDTO.getFuelType())
+        .transmissionType(vehicleDTO.getTransmissionType())
+        .build();
+
+        vehicle.setAutoChasis();
+        vehicle.setAutoEngine();
+
         return vehicleRepository.save(vehicle);
     }
 
@@ -64,7 +70,13 @@ public class VehicleService {
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
-
+    public List<VehicleGet> getAllAvailableVehicles() {
+        return vehicleRepository.findAll().stream()
+                .filter(Vehicle::isActive)
+                .filter(vehicle -> vehicle.getStatus() == Vehicle.VehicleStatus.AVAILABLE)
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
     private VehicleGet convertToDTO(Vehicle vehicle) {
         VehicleGet dto = new VehicleGet();
         dto.setVehicleId(vehicle.getVehicleId());
@@ -164,6 +176,12 @@ public class VehicleService {
     public void deleteVehicle(Long vehicleId) {
         Vehicle vehicle = vehicleRepository.findById(vehicleId)
                 .orElseThrow(() -> new RuntimeException("Vehículo no encontrado"));
+
+        // Verificar si el vehículo está en estado RENTED
+        if (vehicle.getStatus() == VehicleStatus.RENTED) {
+            throw new RuntimeException("No se puede eliminar un vehículo que está en estado de renta");
+        }
+
         vehicle.setActive(false);
         vehicleRepository.save(vehicle);
     }
@@ -195,5 +213,19 @@ public class VehicleService {
 
     public List<Model> getModelsByBrand(Brand brandId) {
         return modelRepository.findByBrandId(brandId);
+    }
+
+    public List<VehicleGet> getVehiclesInMaintenance() {
+        return vehicleRepository.findByStatus(VehicleStatus.IN_MAINTENANCE).stream()
+        .filter(Vehicle::isActive)
+        .map(this::convertToDTO)
+        .collect(Collectors.toList());
+    }
+
+    public Vehicle updateVehicleToAvailabe(Long vehicleId) {
+        Vehicle vehicle = vehicleRepository.findById(vehicleId)
+                .orElseThrow(() -> new RuntimeException("Vehículo no encontrado"));
+        vehicle.setStatus(VehicleStatus.AVAILABLE);
+        return vehicleRepository.save(vehicle);
     }
 }

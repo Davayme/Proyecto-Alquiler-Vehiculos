@@ -109,7 +109,17 @@ public class VehicleController {
         List<VehicleGet> vehicles = vehicleService.getAllVehicles();
         return ResponseEntity.ok(vehicles);
     }
+    @GetMapping("/available")
+    public ResponseEntity<List<VehicleGet>> getAllAvailableVehicles() {
+        List<VehicleGet> vehicles = vehicleService.getAllAvailableVehicles();
+        return ResponseEntity.ok(vehicles);
+    }
 
+    @GetMapping("/maintenance")
+    public ResponseEntity<List<VehicleGet>> getAllMaintenanceVehicles() {
+        List<VehicleGet> vehicles = vehicleService.getVehiclesInMaintenance();
+        return ResponseEntity.ok(vehicles);
+    }
     // Obtener un vehículo por ID
     @GetMapping("/{id}")
     public ResponseEntity<?> getVehicleById(@PathVariable("id") Long vehicleId) {
@@ -130,7 +140,16 @@ public class VehicleController {
                     .body("Error: " + ex.getMessage());
         }
     }
-
+    @PutMapping("/status/{id}")
+    public ResponseEntity<?> updateVehicleToAvailabe(@PathVariable("id") Long vehicleId) {
+        try {
+            Vehicle updatedVehicle = vehicleService.updateVehicleToAvailabe(vehicleId);
+            return ResponseEntity.ok(updatedVehicle);
+        } catch (NoSuchElementException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Error: " + ex.getMessage());
+        }
+    }
     // Eliminar un vehículo por ID
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteVehicle(@PathVariable("id") Long vehicleId) {
